@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>MCD final verifie - LegaBail</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; background: #fff; color: #222; padding: 2rem; max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  p.sub { color: #666; margin-top: 0; margin-bottom: 24px; font-size: 14px; }
+  .mermaid { background: #fff; overflow-x: auto; }
+  h2 { font-size: 16px; margin-top: 32px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 10px; }
+  th, td { border: 1px solid #dce3eb; padding: 6px 10px; text-align: left; }
+  th { background: #f2f5f8; }
+  code { background: #f2f2f2; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+  <h1>MCD final - Application LegaBail (Madagascar)</h1>
+  <p class="sub">Fusion de application-location-legabail-v2.html, formulaire-bailleur-complet-v2.html, locataire.html</p>
+
+  <div class="mermaid">
+erDiagram
+  UTILISATEUR ||--o{ BIEN : possede
+  UTILISATEUR ||--o{ CANDIDATURE : candidate
+  BIEN ||--o{ ANNONCE : publie
+  ANNONCE ||--o{ CANDIDATURE : recoit
+  ANNONCE ||--o{ INTERMEDIAIRE : utilise
+  CANDIDATURE ||--o{ MODIFICATION_DEMANDEE : contient
+  CANDIDATURE ||--o| CONTRAT : devient
+  CONTRAT ||--o{ REVISION_LOYER : historise
+  CONTRAT ||--o{ CAUTION_AVANCE : recoit
+  CONTRAT ||--o{ CONGE : declenche
+
+  UTILISATEUR {
+    int id PK
+    string nom
+    string prenom
+    date date_naissance
+    string type_piece
+    string numero_piece
+    string telephone
+    string adresse
+    string profession
+  }
+  BIEN {
+    int id PK
+    int proprietaire_id FK
+    string adresse
+    string type_bien
+    string usage
+    string type_logement
+    date date_permis_habiter
+    string etat_batiment
+  }
+  ANNONCE {
+    int id PK
+    int bien_id FK
+    float loyer_demande
+    float charges_demandees
+    float prix_nu_reference
+    float caution_demandee
+    float avance_demandee
+    date date_debut_souhaitee
+    date date_fin_souhaitee
+    string sous_location_type
+    float sous_location_part_max
+    float sous_location_prix_max
+    string mode_paiement
+    string lieu_paiement
+    string clauses_speciales
+    string logement_fonction_declare
+    string statut
+  }
+  INTERMEDIAIRE {
+    int id PK
+    int annonce_id FK
+    string nom
+    float commission_montant
+  }
+  CANDIDATURE {
+    int id PK
+    int annonce_id FK
+    int locataire_id FK
+    date date_candidature
+    float loyer_propose
+    int nombre_occupants
+    string usage_prevu
+    string residence_principale
+    string logement_fonction_declare
+    string message
+    string statut
+  }
+  MODIFICATION_DEMANDEE {
+    int id PK
+    int candidature_id FK
+    string terme
+    string decision
+    string texte_demande
+  }
+  CONTRAT {
+    int id PK
+    int candidature_id FK
+    int locataire_id FK
+    date date_debut
+    date date_fin_prevue
+    float loyer_mensuel_initial
+    float charges_mensuelles
+    string mode_paiement
+    string lieu_paiement
+    string sous_location_autorisee
+    float sous_location_part_max
+    float sous_location_prix_max
+    string clauses_speciales
+  }
+  REVISION_LOYER {
+    int id PK
+    int contrat_id FK
+    date date_revision
+    float nouveau_montant
+  }
+  CAUTION_AVANCE {
+    int id PK
+    int contrat_id FK
+    string type
+    float montant
+    date date_versement
+  }
+  CONGE {
+    int id PK
+    int contrat_id FK
+    string type
+    date date_notification
+  }
+  </div>
+
+  <h2>Correspondance avec les articles de l'ordonnance</h2>
+  <table>
+    <tr><th>Article</th><th>Regle</th><th>Champ(s) / table</th></tr>
+    <tr><td>Art. 1-2</td><td>Champ d'application (usage, logement de fonction)</td><td>BIEN.usage, ANNONCE.logement_fonction_declare, CANDIDATURE.usage_prevu / logement_fonction_declare (verification croisee)</td></tr>
+    <tr><td>Art. 3</td><td>Loyer libre &lt;5 ans, plafonne au-dela, revision &gt;=1 an</td><td>BIEN.date_permis_habiter (calcule), REVISION_LOYER (historique)</td></tr>
+    <tr><td>Art. 4-5</td><td>Plafond legal du loyer</td><td>A calculer depuis la valeur du batiment - formule des decrets non fournie, controle humain necessaire</td></tr>
+    <tr><td>Art. 6</td><td>Caution + avance &lt;= 2 mois (logement nu, location au mois)</td><td>CAUTION_AVANCE (somme), BIEN.type_logement</td></tr>
+    <tr><td>Art. 7</td><td>Majoration meuble &lt;= 50% du prix nu</td><td>ANNONCE.prix_nu_reference vs loyer_demande</td></tr>
+    <tr><td>Art. 10-11</td><td>Sous-location : autorisation et prix proportionnel</td><td>ANNONCE.sous_location_type / part_max / prix_max, copies vers CONTRAT</td></tr>
+    <tr><td>Art. 15</td><td>Residence principale et maintien dans les lieux</td><td>CANDIDATURE.residence_principale</td></tr>
+    <tr><td>Art. 16-18</td><td>Duree determinee/indeterminee, preavis</td><td>CONTRAT.date_fin_prevue (nul = indeterminee)</td></tr>
+    <tr><td>Art. 21-24</td><td>Conge du bailleur (travaux, reprise)</td><td>CONGE.type + date_notification, delai calcule</td></tr>
+    <tr><td>Art. 26</td><td>Mode et lieu de paiement</td><td>ANNONCE / CONTRAT.mode_paiement, lieu_paiement</td></tr>
+    <tr><td>Art. 28</td><td>Clauses speciales - controle humain</td><td>ANNONCE / CONTRAT.clauses_speciales</td></tr>
+    <tr><td>Art. 30</td><td>Intermediaire, commission &lt;= 15 jours de loyer</td><td>INTERMEDIAIRE.commission_montant vs ANNONCE.loyer_demande / 2</td></tr>
+  </table>
+
+  <h2>Ce qui n'est volontairement pas stocke (toujours calcule)</h2>
+  <ul>
+    <li>Age d'une personne : calcule depuis date_naissance</li>
+    <li>Anciennete du batiment / regime du loyer : calcule depuis date_permis_habiter</li>
+    <li>Duree determinee ou indeterminee : deduite de date_fin_prevue vide ou remplie</li>
+    <li>Bailleur et bien d'un contrat : deduits via CONTRAT -&gt; CANDIDATURE -&gt; ANNONCE -&gt; BIEN -&gt; proprietaire_id</li>
+    <li>Loyer actuel : derniere ligne de REVISION_LOYER, jamais un champ fige</li>
+  </ul>
+
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+</body>
+</html>
