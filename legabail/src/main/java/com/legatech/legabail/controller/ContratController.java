@@ -1,6 +1,7 @@
 package com.legatech.legabail.controller;
 
 import com.legatech.legabail.entity.RoleUtilisateur;
+import com.legatech.legabail.entity.Contrat;
 import com.legatech.legabail.form.SignatureForm;
 import com.legatech.legabail.service.ContratService;
 import com.legatech.legabail.service.SignatureService;
@@ -10,9 +11,11 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Locale;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -35,12 +38,38 @@ public class ContratController {
     }
 
     @GetMapping("/bailleur/contrats")
-    public String listerBailleur(Model model, HttpSession session) {
+    public String listerBailleur(
+            @RequestParam(required = false) String ville,
+            @RequestParam(required = false) LocalDate dateDebut,
+            @RequestParam(required = false) LocalDate dateFin,
+            @RequestParam(required = false) String statut,
+            Model model, HttpSession session) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
-        model.addAttribute("contrats",
-                contrats.listerBailleur(BailleurController.getBailleurId(session)));
+        List<Contrat> contratsBailleur = contrats.listerBailleur(
+                BailleurController.getBailleurId(session));
+        String recherche = ville == null ? "" : ville.strip();
+        List<Contrat> contratsFiltres = contratsBailleur.stream()
+                .filter(contrat -> recherche.isBlank()
+                        || contrat.getProposition().getCandidature().getAnnonce().getBien()
+                        .getAdresse().toLowerCase(Locale.ROOT)
+                        .contains(recherche.toLowerCase(Locale.ROOT)))
+                .filter(contrat -> dateDebut == null
+                        || !contrat.getDateGeneration().toLocalDate().isBefore(dateDebut))
+                .filter(contrat -> dateFin == null
+                        || !contrat.getDateGeneration().toLocalDate().isAfter(dateFin))
+                .filter(contrat -> statut == null || statut.isBlank()
+                        || statut.equals(contrat.getStatut()))
+                .toList();
+
+        model.addAttribute("contrats", contratsFiltres);
+        model.addAttribute("totalContrats", contratsBailleur.size());
+        model.addAttribute("resultats", contratsFiltres.size());
+        model.addAttribute("ville", ville);
+        model.addAttribute("dateDebut", dateDebut);
+        model.addAttribute("dateFin", dateFin);
+        model.addAttribute("statut", statut);
         return "bailleur/contrats";
     }
 

@@ -33,4 +33,5 @@ public class Contrat {
     public String getStatut() { return statut; }
     public void setStatut(String statut) { this.statut = statut; }
     public OffsetDateTime getDateGeneration() { return dateGeneration; }
+    public void setDateGeneration(OffsetDateTime dateGeneration) { this.dateGeneration = dateGeneration; }
 }

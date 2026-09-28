@@ -22,6 +22,38 @@
     <h1>Mes contrats</h1>
     <p>Contrats générés à partir des candidatures de vos biens.</p>
 
+    <section class="contract-filters">
+        <h2>Recherche intelligente</h2>
+        <p>Combinez plusieurs critères pour retrouver un contrat en quelques secondes.</p>
+        <form th:action="@{/bailleur/contrats}" method="get">
+            <label for="ville">Ville ou adresse</label>
+            <input id="ville" name="ville" type="search"
+                   th:value="${ville}" placeholder="Ex. Antananarivo">
+
+            <label for="dateDebut">Généré à partir du</label>
+            <input id="dateDebut" name="dateDebut" type="date" th:value="${dateDebut}">
+
+            <label for="dateFin">Généré jusqu'au</label>
+            <input id="dateFin" name="dateFin" type="date" th:value="${dateFin}">
+
+            <label for="statut">Statut</label>
+            <select id="statut" name="statut">
+                <option value="" th:selected="${statut == null or statut == ''}">Tous les statuts</option>
+                <option value="A_SIGNER" th:selected="${statut == 'A_SIGNER'}">À signer</option>
+                <option value="SIGNE" th:selected="${statut == 'SIGNE'}">Signé</option>
+                <option value="TERMINE" th:selected="${statut == 'TERMINE'}">Terminé</option>
+                <option value="RESILIE" th:selected="${statut == 'RESILIE'}">Résilié</option>
+            </select>
+
+            <div>
+                <button class="button" type="submit">Filtrer</button>
+                <a class="button secondary" th:href="@{/bailleur/contrats}">Réinitialiser</a>
+            </div>
+        </form>
+    </section>
+
+    <p class="filter-result"
+       th:text="${resultats + ' contrat(s) trouvé(s) sur ' + totalContrats}"></p>
     <p th:if="${#lists.isEmpty(contrats)}">Aucun contrat généré pour le moment.</p>
     <section th:unless="${#lists.isEmpty(contrats)}">
         <article th:each="contrat : ${contrats}">
