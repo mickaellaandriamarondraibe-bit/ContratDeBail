@@ -484,3 +484,8 @@ Contrat généré
             ↓
 Signatures
 ```
+
+UPDATE bien
+SET image_url = '/images/biens/image copy 2.png'
+WHERE id = 13;
+

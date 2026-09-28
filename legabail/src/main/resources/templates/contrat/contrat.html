@@ -1,27 +1,157 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{locataire/fragments :: head('Contrat de bail')}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main class="document"><h1>Contrat de bail</h1>
-<p th:text="${contrat.numero}"></p><p class="statut" th:text="${contrat.statut}"></p>
-<p th:text="'Genere le ' + ${#temporals.format(contrat.dateGeneration, 'dd/MM/yyyy HH:mm')}"></p>
-<article class="texte-contrat" th:text="${contrat.contenu}"></article>
-<section><h2>Signatures</h2>
-<p th:if="${#lists.isEmpty(signatures)}">En attente des signatures du bailleur et du locataire.</p>
-<div class="signature" th:each="s : ${signatures}">
-  <strong th:text="${s.utilisateur.nom + ' ' + s.utilisateur.prenom}"></strong>
-  <span th:text="${s.utilisateur.role}"></span>
-  <p th:text="${s.statut} + ' - ' + ${#temporals.format(s.dateSignature, 'dd/MM/yyyy HH:mm')}"></p>
-</div>
-<form class="sans-impression" th:if="${!dejaSigne and contrat.statut == 'A_SIGNER' and impression != true}" th:action="@{/contrats/{id}/signer(id=${contrat.id})}" th:object="${signatureForm}" method="post">
-  <input th:replace="~{locataire/fragments :: csrf}"><div th:replace="~{locataire/fragments :: erreurs}"></div>
-  <label class="case"><input type="checkbox" th:field="*{confirmation}" required>J'ai lu le contrat et je confirme ma signature.</label>
-  <button type="submit">Signer le contrat</button>
-</form></section>
-<div class="actions sans-impression">
-  <a th:href="@{/candidatures/{id}(id=${contrat.proposition.candidature.id})}">Retour au dossier</a>
-  <a th:if="${impression != true}" th:href="@{/contrats/{id}/imprimer(id=${contrat.id})}">Imprimer / PDF</a>
-  <button th:if="${impression == true}" type="button" onclick="window.print()">Imprimer / PDF</button>
-</div></main>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="'Contrat ' + ${contrat.numero} + ' | LegaBail'">Contrat de bail | LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/locataire.css}">
+    <link rel="stylesheet" th:href="@{/css/contrat.css}">
+</head>
+<body>
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="contract-page">
+    <div class="contract-intro sans-impression">
+        <span class="eyebrow">Contrat généré</span>
+        <h1>Accord trouvé entre les deux parties</h1>
+        <p>Le document reprend les conditions acceptées par le bailleur et le locataire.</p>
+    </div>
+
+    <div class="contract-toolbar sans-impression">
+        <a class="btn secondary" th:href="@{/candidatures/{id}(id=${candidature.id})}">Retour au dossier</a>
+        <div>
+            <a class="btn secondary" th:if="${impression != true}"
+               th:href="@{/contrats/{id}/imprimer(id=${contrat.id})}">Imprimer / Enregistrer en PDF</a>
+            <button class="btn secondary" th:if="${impression == true}" type="button"
+                    onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+        </div>
+    </div>
+
+    <section class="signature-action sans-impression"
+             th:if="${!dejaSigne and contrat.statut == 'A_SIGNER' and impression != true}">
+        <form th:action="@{/contrats/{id}/signer(id=${contrat.id})}" th:object="${signatureForm}" method="post">
+            <input th:replace="~{locataire/fragments :: csrf}">
+            <div th:replace="~{locataire/fragments :: erreurs}"></div>
+            <label class="case">
+                <input type="checkbox" th:field="*{confirmation}" required>
+                J'ai lu le contrat et je confirme que ma signature vaut acceptation de son contenu.
+            </label>
+            <button class="btn" type="submit">Signer le contrat</button>
+        </form>
+    </section>
+
+    <article class="contract-paper" id="contractDocument">
+        <h2>Contrat de bail à usage d'habitation</h2>
+        <p class="contract-ref" th:text="'Contrat n° ' + ${contrat.numero}"></p>
+
+        <p>Entre les soussignés :</p>
+        <div class="contract-identity">
+            <p><strong>Le bailleur :</strong>
+                <span th:text="${bailleur.prenom + ' ' + bailleur.nom}"></span>, titulaire de la pièce d'identité
+                n° <span th:text="${bailleur.numeroPiece ?: 'non renseignée'}"></span>, joignable à
+                <span th:text="${bailleur.email}"></span>
+                <span th:if="${bailleur.telephone != null and !#strings.isEmpty(bailleur.telephone)}"
+                      th:text="' ou au ' + ${bailleur.telephone}"></span>, ci-après dénommé « le Bailleur » ;
+            </p>
+            <p><strong>Et le locataire :</strong>
+                <span th:text="${locataire.prenom + ' ' + locataire.nom}"></span>, titulaire de la pièce d'identité
+                n° <span th:text="${locataire.numeroPiece ?: 'non renseignée'}"></span>, joignable à
+                <span th:text="${locataire.email}"></span>
+                <span th:if="${locataire.telephone != null and !#strings.isEmpty(locataire.telephone)}"
+                      th:text="' ou au ' + ${locataire.telephone}"></span>, ci-après dénommé « le Locataire ».
+            </p>
+        </div>
+        <p>Il a été convenu et arrêté ce qui suit :</p>
+
+        <h3>Article 1 — Objet du contrat</h3>
+        <p>Le Bailleur donne en location au Locataire, qui accepte, le logement décrit ci-dessous. Le présent contrat prend effet lorsque les deux parties l'ont signé.</p>
+
+        <h3>Article 2 — Désignation du logement</h3>
+        <p>Le bien loué est un <span th:text="${#strings.toLowerCase(bien.typeBien)}"></span>
+            <span th:text="${bien.typeLogement.name() == 'MEUBLE' ? 'meublé' : 'non meublé'}"></span>,
+            situé à <span th:text="${bien.adresse}"></span>. Il est destiné à l'usage
+            <span th:text="${#strings.toLowerCase(candidature.usagePrevu)}"></span> du Locataire et de
+            <span th:text="${candidature.nombreOccupants}"></span> occupant(s).
+            <span th:if="${bien.typeLogement.name() == 'MEUBLE'}">L'inventaire du mobilier et l'état des lieux sont joints au présent contrat.</span>
+        </p>
+
+        <h3>Article 3 — Durée</h3>
+        <p th:if="${proposition.dateFin != null}">Le bail est conclu pour une durée déterminée
+            <span th:if="${dureeMois != null and dureeMois > 0}" th:text="'de ' + ${dureeMois} + ' mois'"></span>.
+            Il commence le <span th:text="${dateDebutTexte}"></span>
+            et prend fin le <span th:text="${dateFinTexte}"></span>, sous réserve des règles légales applicables à son renouvellement ou à sa résiliation.</p>
+        <p th:unless="${proposition.dateFin != null}">Le bail est conclu pour une durée indéterminée à compter du
+            <span th:text="${dateDebutTexte}"></span>. Il peut prendre fin dans les conditions et délais prévus par les règles applicables.</p>
+
+        <h3>Article 4 — Loyer et charges</h3>
+        <p>Le loyer mensuel est fixé à <strong th:text="${loyerTexte} + ' Ar'"></strong>.
+            Les charges mensuelles sont fixées à <strong th:text="${chargesTexte} + ' Ar'"></strong>.
+            Le total mensuel à payer est donc de <strong th:text="${totalMensuelTexte} + ' Ar'"></strong>, selon le mode de paiement suivant :
+            <span th:text="${annonce.modePaiement ?: 'à convenir entre les parties'}"></span>.</p>
+
+        <h3>Article 5 — Caution et avance</h3>
+        <p>La caution est fixée à <strong th:text="${cautionTexte} + ' Ar'"></strong> et l'avance à
+            <strong th:text="${avanceTexte} + ' Ar'"></strong>, soit un total de
+            <strong th:text="${garantieTotaleTexte} + ' Ar'"></strong>. La caution garantit l'exécution des obligations du Locataire et sera restituée après son départ, déduction faite des sommes restant légalement dues et des réparations justifiées.</p>
+
+        <h3>Article 6 — Obligations du bailleur</h3>
+        <ol>
+            <li>Remettre au Locataire un logement utilisable conformément à la destination prévue.</li>
+            <li>Garantir au Locataire une jouissance paisible du logement.</li>
+            <li>Effectuer les réparations qui lui incombent conformément aux règles applicables.</li>
+            <li>Remettre une quittance ou une preuve de paiement lorsque cela est nécessaire.</li>
+        </ol>
+
+        <h3>Article 7 — Obligations du locataire</h3>
+        <ol>
+            <li>Payer le loyer et les charges aux dates convenues.</li>
+            <li>Utiliser le logement uniquement pour l'usage prévu par ce contrat.</li>
+            <li>Entretenir normalement le logement et répondre des dégradations qui lui sont imputables.</li>
+            <li>Respecter la condition de sous-location suivante : <span th:text="${proposition.sousLocation ?: 'aucune sous-location sans autorisation écrite'}"></span>.</li>
+            <li>Informer rapidement le Bailleur de tout dommage important nécessitant une intervention.</li>
+        </ol>
+
+        <h3>Article 8 — État des lieux et inventaire</h3>
+        <p>Un état des lieux contradictoire est établi lors de la remise des clés et signé par les deux parties.
+            <span th:if="${bien.typeLogement.name() == 'MEUBLE'}">L'inventaire du mobilier fait partie intégrante du présent contrat : <span th:text="${bien.inventaire ?: 'inventaire à établir lors de la remise des clés'}"></span>.</span>
+            <span th:unless="${bien.typeLogement.name() == 'MEUBLE'}">Le logement est remis non meublé.</span>
+        </p>
+
+        <h3>Article 9 — Résiliation et préavis</h3>
+        <p>Toute résiliation doit respecter les motifs, les formes et les délais prévus par les règles juridiques applicables. La partie qui demande la fin du bail doit notifier l'autre partie par un moyen permettant de prouver la date de réception.</p>
+
+        <h3>Article 10 — Modification du contrat</h3>
+        <p>Toute modification du loyer, de la durée, de l'usage du logement ou d'une autre condition essentielle doit être acceptée par les deux parties et constatée par écrit dans un avenant.</p>
+        <p th:if="${proposition.clausesSpeciales != null and !#strings.isEmpty(proposition.clausesSpeciales)}"><strong>Clause particulière acceptée :</strong> <span th:text="${proposition.clausesSpeciales}"></span></p>
+
+        <h3>Article 11 — Litiges</h3>
+        <p>Les parties rechercheront d'abord une solution amiable. À défaut d'accord, le litige sera porté devant l'autorité ou la juridiction compétente.</p>
+
+        <p class="contract-made">Fait à Antananarivo, le
+            <span th:text="${dateGenerationTexte}"></span>, en deux exemplaires originaux, un pour chaque partie.</p>
+
+        <div class="signature-grid">
+            <div class="signature-box">
+                <strong>Le Bailleur</strong>
+                <span class="signature-name" th:text="${bailleur.prenom + ' ' + bailleur.nom}"></span>
+                <small>Signature précédée de la mention « Lu et approuvé »</small>
+                <span class="signature-state signed"
+                      th:if="${bailleurSignature != null and bailleurSignature.statut == 'SIGNEE'}"
+                      th:text="'Signé électroniquement le ' + ${#temporals.format(bailleurSignature.dateSignature, 'dd/MM/yyyy à HH:mm')}"></span>
+                <span class="signature-state" th:unless="${bailleurSignature != null and bailleurSignature.statut == 'SIGNEE'}">Signature en attente</span>
+            </div>
+            <div class="signature-box">
+                <strong>Le Locataire</strong>
+                <span class="signature-name" th:text="${locataire.prenom + ' ' + locataire.nom}"></span>
+                <small>Signature précédée de la mention « Lu et approuvé »</small>
+                <span class="signature-state signed"
+                      th:if="${locataireSignature != null and locataireSignature.statut == 'SIGNEE'}"
+                      th:text="'Signé électroniquement le ' + ${#temporals.format(locataireSignature.dateSignature, 'dd/MM/yyyy à HH:mm')}"></span>
+                <span class="signature-state" th:unless="${locataireSignature != null and locataireSignature.statut == 'SIGNEE'}">Signature en attente</span>
+            </div>
+        </div>
+    </article>
+</main>
 <script th:if="${impression == true}">window.addEventListener('load', function () { window.print(); });</script>
-</body></html>
+</body>
+</html>

@@ -32,7 +32,7 @@
             </dl>
             <div class="listing-notice">Le montant affiché sera repris dans votre formulaire. Vous pourrez accepter les conditions ou demander une modification.</div>
             <a class="btn accent detail-action" th:if="${annonce.statut.name() == 'PUBLIEE'}"
-               th:href="@{/annonces/{id}/candidater(id=${annonce.id})}">Je souhaite louer ce bien</a>
+               th:href="@{/annonces/{id}/candidater(id=${annonce.id})}">Candidater pour ce bien</a>
         </section>
     </div>
 </main>
