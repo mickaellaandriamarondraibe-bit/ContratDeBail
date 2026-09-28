@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inscription bailleur - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <h1>Créer un compte bailleur</h1>
+    <p>Renseignez vos informations pour gérer vos biens et vos annonces.</p>
+
+    <form th:action="@{/inscription/bailleur}" th:object="${bailleurForm}" method="post">
+        <div th:if="${#fields.hasGlobalErrors()}" class="errors">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+        </div>
+
+        <label for="prenom">Prénom</label>
+        <input id="prenom" th:field="*{prenom}" type="text" required>
+        <p class="field-error" th:errors="*{prenom}"></p>
+
+        <label for="nom">Nom</label>
+        <input id="nom" th:field="*{nom}" type="text" required>
+        <p class="field-error" th:errors="*{nom}"></p>
+
+        <label for="email">Adresse email</label>
+        <input id="email" th:field="*{email}" type="email" required>
+        <p class="field-error" th:errors="*{email}"></p>
+
+        <label for="motDePasse">Mot de passe</label>
+        <input id="motDePasse" th:field="*{motDePasse}" type="password" minlength="8" required>
+        <p class="field-error" th:errors="*{motDePasse}"></p>
+
+        <label for="telephone">Téléphone</label>
+        <input id="telephone" th:field="*{telephone}" type="tel">
+        <p class="field-error" th:errors="*{telephone}"></p>
+
+        <label for="numeroPiece">Numéro de pièce</label>
+        <input id="numeroPiece" th:field="*{numeroPiece}" type="text">
+        <p class="field-error" th:errors="*{numeroPiece}"></p>
+
+        <button type="submit">Créer mon compte</button>
+    </form>
+</main>
+</body>
+</html>

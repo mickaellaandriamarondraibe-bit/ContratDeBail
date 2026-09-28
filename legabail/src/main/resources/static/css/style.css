@@ -1,0 +1,55 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    color: #202124;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    padding: 2rem;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+form {
+    display: grid;
+    gap: .5rem;
+    max-width: 620px;
+}
+
+input, select, textarea, button {
+    font: inherit;
+    padding: .6rem;
+}
+
+textarea {
+    min-height: 90px;
+}
+
+button, a {
+    margin-top: .5rem;
+}
+
+button {
+    cursor: pointer;
+}
+
+nav {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.field-error, .errors {
+    color: #b00020;
+}
+
+article, section {
+    border: 1px solid #ddd;
+    margin: 1rem 0;
+    padding: 1rem;
+}

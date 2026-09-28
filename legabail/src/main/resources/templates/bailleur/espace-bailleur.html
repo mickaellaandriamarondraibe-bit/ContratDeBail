@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Espace bailleur - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <h1 th:text="'Bienvenue ' + ${bailleur.prenom} + ' ' + ${bailleur.nom}"></h1>
+
+    <nav>
+        <a th:href="@{/bailleur/biens/nouveau}">Ajouter un bien</a>
+        <a th:href="@{/bailleur/annonces/nouvelle}">Créer une annonce</a>
+        <a th:href="@{/annonces}">Voir les annonces publiées</a>
+    </nav>
+
+    <section>
+        <h2>Mes biens</h2>
+        <p th:if="${#lists.isEmpty(biens)}">Aucun bien enregistré.</p>
+        <ul th:unless="${#lists.isEmpty(biens)}">
+            <li th:each="bien : ${biens}">
+                <strong th:text="${bien.adresse}"></strong>
+                <span th:text="${' - ' + bien.typeLogement}"></span>
+                <a th:href="@{/bailleur/biens/{id}/modifier(id=${bien.id})}">Modifier</a>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Mes annonces</h2>
+        <p th:if="${#lists.isEmpty(annonces)}">Aucune annonce enregistrée.</p>
+        <ul th:unless="${#lists.isEmpty(annonces)}">
+            <li th:each="annonce : ${annonces}">
+                <a th:href="@{/annonces/{id}(id=${annonce.id})}"
+                   th:text="${annonce.bien.adresse}"></a>
+                <span th:text="${' - ' + annonce.loyer + ' - ' + annonce.statut}"></span>
+                <form th:if="${annonce.statut.name() == 'BROUILLON'}"
+                      th:action="@{/bailleur/annonces/{id}/publier(id=${annonce.id})}"
+                      method="post" style="display:inline">
+                    <button type="submit">Publier</button>
+                </form>
+                <form th:if="${annonce.statut.name() != 'ARCHIVEE' and annonce.statut.name() != 'LOUEE'}"
+                      th:action="@{/bailleur/annonces/{id}/archiver(id=${annonce.id})}"
+                      method="post" style="display:inline">
+                    <button type="submit">Archiver</button>
+                </form>
+            </li>
+        </ul>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Détail de l'annonce - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <h1 th:text="${annonce.bien.adresse}">Adresse du bien</h1>
+    <dl>
+        <dt>Type de bien</dt>
+        <dd th:text="${annonce.bien.typeBien}"></dd>
+        <dt>Type de logement</dt>
+        <dd th:text="${annonce.bien.typeLogement}"></dd>
+        <dt>Usage</dt>
+        <dd th:text="${annonce.bien.usage}"></dd>
+        <dt>Loyer</dt>
+        <dd th:text="${annonce.loyer}"></dd>
+        <dt>Charges</dt>
+        <dd th:text="${annonce.charges}"></dd>
+        <dt>Caution</dt>
+        <dd th:text="${annonce.caution}"></dd>
+        <dt>Avance</dt>
+        <dd th:text="${annonce.avance}"></dd>
+        <dt>Date de début</dt>
+        <dd th:text="${annonce.dateDebut}"></dd>
+        <dt>Date de fin</dt>
+        <dd th:text="${annonce.dateFin ?: 'Non précisée'}"></dd>
+        <dt>Mode de paiement</dt>
+        <dd th:text="${annonce.modePaiement ?: 'Non précisé'}"></dd>
+        <dt>Clauses spéciales</dt>
+        <dd th:text="${annonce.clausesSpeciales ?: 'Aucune'}"></dd>
+    </dl>
+    <a th:href="@{/annonces}">Retour aux annonces</a>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Annonces publiées - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <h1>Annonces publiées</h1>
+    <p th:if="${#lists.isEmpty(annonces)}">Aucune annonce publiée pour le moment.</p>
+    <section th:unless="${#lists.isEmpty(annonces)}">
+        <article th:each="annonce : ${annonces}">
+            <h2>
+                <a th:href="@{/annonces/{id}(id=${annonce.id})}"
+                   th:text="${annonce.bien.adresse}"></a>
+            </h2>
+            <p th:text="${'Loyer : ' + annonce.loyer}"></p>
+            <p th:text="${'Charges : ' + annonce.charges}"></p>
+            <p th:text="${'Type : ' + annonce.bien.typeLogement}"></p>
+        </article>
+    </section>
+</main>
+</body>
+</html>
