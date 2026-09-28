@@ -3,7 +3,6 @@ package com.legatech.legabail.controller;
 import com.legatech.legabail.entity.RoleUtilisateur;
 import com.legatech.legabail.form.SignatureForm;
 import com.legatech.legabail.service.ContratService;
-import com.legatech.legabail.service.SessionPartie;
 import com.legatech.legabail.service.SignatureService;
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
