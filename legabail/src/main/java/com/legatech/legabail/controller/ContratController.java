@@ -34,6 +34,16 @@ public class ContratController {
         return "contrat/contrat";
     }
 
+    @GetMapping("/bailleur/contrats")
+    public String listerBailleur(Model model, HttpSession session) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
+        model.addAttribute("contrats",
+                contrats.listerBailleur(BailleurController.getBailleurId(session)));
+        return "bailleur/contrats";
+    }
+
     @GetMapping("/contrats/{id}/imprimer")
     public String imprimer(@PathVariable Long id, Model model, HttpSession session) {
         afficher(id, model, session);

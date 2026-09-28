@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mes contrats - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">LegaBail</a>
+    <nav aria-label="Navigation principale">
+        <a th:href="@{/espace-bailleur}">Espace bailleur</a>
+        <a th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
+        <form class="nav-form" th:action="@{/deconnexion}" method="post">
+            <button class="nav-button" type="submit">Déconnexion</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+    <h1>Mes contrats</h1>
+    <p>Contrats générés à partir des candidatures de vos biens.</p>
+
+    <p th:if="${#lists.isEmpty(contrats)}">Aucun contrat généré pour le moment.</p>
+    <section th:unless="${#lists.isEmpty(contrats)}">
+        <article th:each="contrat : ${contrats}">
+            <h2 th:text="${contrat.numero}">LB-2026-0001</h2>
+            <p>
+                <strong>Logement :</strong>
+                <span th:text="${contrat.proposition.candidature.annonce.bien.adresse}"></span>
+            </p>
+            <p>
+                <strong>Locataire :</strong>
+                <span th:text="${contrat.proposition.candidature.locataire.prenom
+                    + ' ' + contrat.proposition.candidature.locataire.nom}"></span>
+            </p>
+            <p>
+                <strong>Statut :</strong>
+                <span th:text="${contrat.statut}"></span>
+            </p>
+            <p>
+                <strong>Généré le :</strong>
+                <span th:text="${#temporals.format(contrat.dateGeneration, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+            <a class="button" th:href="@{/contrats/{id}(id=${contrat.id})}">
+                Consulter le contrat
+            </a>
+        </article>
+    </section>
+</main>
+</body>
+</html>

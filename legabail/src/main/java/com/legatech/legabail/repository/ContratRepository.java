@@ -2,11 +2,24 @@ package com.legatech.legabail.repository;
 
 import com.legatech.legabail.entity.Contrat;
 import jakarta.persistence.LockModeType;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 
 public interface ContratRepository extends JpaRepository<Contrat, Long> {
     Optional<Contrat> findByPropositionId(Long id);
+
+    @Query("""
+            select c from Contrat c
+            join fetch c.proposition p
+            join fetch p.candidature ca
+            join fetch ca.annonce a
+            join fetch a.bien b
+            where b.bailleur.id = :bailleurId
+            order by c.dateGeneration desc
+            """)
+    List<Contrat> findByBailleurId(Long bailleurId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select c from Contrat c where c.id = :id")
     Optional<Contrat> verrouiller(Long id);

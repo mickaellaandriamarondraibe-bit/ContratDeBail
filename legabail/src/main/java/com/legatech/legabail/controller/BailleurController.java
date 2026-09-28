@@ -66,6 +66,11 @@ public class BailleurController {
         return "bailleur/espace-bailleur";
     }
 
+    @GetMapping("/bailleur")
+    public String redirigerVersEspaceBailleur() {
+        return "redirect:/espace-bailleur";
+    }
+
     static Long getBailleurId(HttpSession session) {
         Object value = session.getAttribute(BAILLEUR_ID);
         if (!(value instanceof Long bailleurId)) {

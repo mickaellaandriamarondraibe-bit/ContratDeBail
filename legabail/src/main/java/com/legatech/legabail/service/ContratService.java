@@ -10,6 +10,7 @@ import com.legatech.legabail.repository.ContratRepository;
 import com.legatech.legabail.repository.PropositionRepository;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,11 @@ public class ContratService {
         PartiesContrat.verifier(contrat.getProposition().getCandidature(), utilisateurId);
         PartiesContrat.charger(contrat.getProposition().getCandidature());
         return contrat;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Contrat> listerBailleur(Long bailleurId) {
+        return contrats.findByBailleurId(bailleurId);
     }
 
     private String construireContenu(Proposition proposition) {
