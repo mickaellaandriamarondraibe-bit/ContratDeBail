@@ -11,6 +11,9 @@
 
 BEGIN;
 
+-- Colonne reservee aux futures photos televersees des biens.
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS image_url TEXT;
+
 -- ---------------------------------------------------------------------------
 -- 1. Utilisateurs : 3 bailleurs et 4 locataires
 -- Mot de passe commun pour ces comptes : Demo2026!
@@ -343,3 +346,4 @@ UNION ALL SELECT 'proposition', COUNT(*) FROM proposition
 UNION ALL SELECT 'contrat', COUNT(*) FROM contrat
 UNION ALL SELECT 'signature', COUNT(*) FROM signature
 ORDER BY table_name;
+

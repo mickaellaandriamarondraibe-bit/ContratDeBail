@@ -5,6 +5,7 @@
   <title th:text="${titre} + ' | LegaBail'">LegaBail</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="stylesheet" th:href="@{/css/locataire.css}">
+  <link rel="stylesheet" th:href="@{/css/annonces.css}">
 </head>
 <body>
 <header th:fragment="navigation">
@@ -38,3 +39,4 @@
   <div><dt>Clauses particulières</dt><dd class="multiligne" th:text="${p.clausesSpeciales ?: 'Aucune'}"></dd></div>
 </dl>
 </body></html>
+

@@ -56,6 +56,7 @@ public class BienService {
         bien.setTypeLogement(form.getTypeLogement());
         bien.setDatePermisHabiter(form.getDatePermisHabiter());
         bien.setInventaire(form.getInventaire());
+        bien.setImageUrl(form.getImageUrl());
     }
 
     private void verifierProprietaire(Bien bien, Long bailleurId) {
@@ -70,3 +71,4 @@ public class BienService {
         }
     }
 }
+

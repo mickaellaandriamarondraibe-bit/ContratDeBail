@@ -45,6 +45,9 @@ public class Bien {
     @Column(columnDefinition = "TEXT")
     private String inventaire;
 
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
+
     public Bien() {
     }
 
@@ -112,6 +115,14 @@ public class Bien {
         this.inventaire = inventaire;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -128,3 +139,4 @@ public class Bien {
         return getClass().hashCode();
     }
 }
+

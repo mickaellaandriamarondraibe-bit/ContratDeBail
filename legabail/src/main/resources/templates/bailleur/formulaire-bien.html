@@ -40,6 +40,11 @@
             </div>
 
             <div class="form-grid">
+                <div class="photo-slot full" aria-label="Emplacement de la photo du bien">
+                    <b>Photo du bien</b>
+                    <span>Emplacement réservé au futur téléversement</span>
+                </div>
+                <input th:field="*{imageUrl}" type="hidden">
                 <div class="field full">
                     <label for="adresse">Adresse <span class="required">*</span></label>
                     <textarea id="adresse" th:field="*{adresse}" placeholder="Ville, quartier et adresse" required></textarea>
@@ -91,3 +96,4 @@
 <script th:src="@{/js/controle-regles.js}"></script>
 </body>
 </html>
+
