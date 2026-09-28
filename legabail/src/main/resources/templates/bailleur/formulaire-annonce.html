@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouvelle annonce - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <h1>Créer une annonce</h1>
+
+    <form th:action="@{/bailleur/annonces}" th:object="${annonceForm}" method="post">
+        <label for="bienId">Bien concerné</label>
+        <select id="bienId" th:field="*{bienId}" required>
+            <option value="">-- Sélectionner un bien --</option>
+            <option th:each="bien : ${biens}"
+                    th:value="${bien.id}"
+                    th:text="${bien.adresse}"></option>
+        </select>
+        <p class="field-error" th:errors="*{bienId}"></p>
+
+        <label for="loyer">Loyer</label>
+        <input id="loyer" th:field="*{loyer}" type="number" min="0.01" step="0.01" required>
+        <p class="field-error" th:errors="*{loyer}"></p>
+
+        <label for="charges">Charges</label>
+        <input id="charges" th:field="*{charges}" type="number" min="0" step="0.01" required>
+        <p class="field-error" th:errors="*{charges}"></p>
+
+        <label for="caution">Caution</label>
+        <input id="caution" th:field="*{caution}" type="number" min="0" step="0.01" required>
+        <p class="field-error" th:errors="*{caution}"></p>
+
+        <label for="avance">Avance</label>
+        <input id="avance" th:field="*{avance}" type="number" min="0" step="0.01" required>
+        <p class="field-error" th:errors="*{avance}"></p>
+
+        <label for="prixLogementNu">Prix du logement nu</label>
+        <input id="prixLogementNu" th:field="*{prixLogementNu}" type="number" min="0" step="0.01">
+
+        <label for="dateDebut">Date de début</label>
+        <input id="dateDebut" th:field="*{dateDebut}" type="date" required>
+        <p class="field-error" th:errors="*{dateDebut}"></p>
+
+        <label for="dateFin">Date de fin</label>
+        <input id="dateFin" th:field="*{dateFin}" type="date">
+
+        <label for="sousLocation">Sous-location</label>
+        <input id="sousLocation" th:field="*{sousLocation}" type="text">
+
+        <label for="modePaiement">Mode de paiement</label>
+        <input id="modePaiement" th:field="*{modePaiement}" type="text">
+
+        <label for="clausesSpeciales">Clauses spéciales</label>
+        <textarea id="clausesSpeciales" th:field="*{clausesSpeciales}"></textarea>
+
+        <button type="submit">Enregistrer en brouillon</button>
+        <a th:href="@{/espace-bailleur}">Annuler</a>
+    </form>
+</main>
+</body>
+</html>

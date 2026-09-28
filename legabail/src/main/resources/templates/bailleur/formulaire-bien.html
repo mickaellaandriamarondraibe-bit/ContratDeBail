@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${bienId != null ? 'Modifier un bien' : 'Nouveau bien'}">Nouveau bien</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <h1 th:text="${bienId != null ? 'Modifier un bien' : 'Enregistrer un bien'}"></h1>
+
+    <form th:action="${bienId != null ? '/bailleur/biens/' + bienId : '/bailleur/biens'}"
+          th:object="${bienForm}" method="post">
+        <label for="adresse">Adresse</label>
+        <textarea id="adresse" th:field="*{adresse}" required></textarea>
+        <p class="field-error" th:errors="*{adresse}"></p>
+
+        <label for="typeBien">Type de bien</label>
+        <input id="typeBien" th:field="*{typeBien}" type="text" required>
+        <p class="field-error" th:errors="*{typeBien}"></p>
+
+        <label for="usage">Usage</label>
+        <input id="usage" th:field="*{usage}" type="text" required>
+        <p class="field-error" th:errors="*{usage}"></p>
+
+        <label for="typeLogement">Type de logement</label>
+        <select id="typeLogement" th:field="*{typeLogement}" required>
+            <option value="">-- Sélectionner --</option>
+            <option th:each="type : ${typesLogement}"
+                    th:value="${type}"
+                    th:text="${type}"></option>
+        </select>
+        <p class="field-error" th:errors="*{typeLogement}"></p>
+
+        <label for="datePermisHabiter">Date du permis d'habiter</label>
+        <input id="datePermisHabiter" th:field="*{datePermisHabiter}" type="date">
+
+        <label for="inventaire">Inventaire</label>
+        <textarea id="inventaire" th:field="*{inventaire}"></textarea>
+
+        <button type="submit">Enregistrer</button>
+        <a th:href="@{/espace-bailleur}">Annuler</a>
+    </form>
+</main>
+</body>
+</html>
