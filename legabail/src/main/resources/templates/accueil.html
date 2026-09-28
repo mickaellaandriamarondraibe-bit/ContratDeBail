@@ -8,10 +8,8 @@
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" th:href="@{/}">LegaBail</a>
+    <a class="brand" th:href="@{/}">Bienvenu sur LegaBail</a>
     <nav aria-label="Navigation principale">
-        <a th:href="@{/annonces}">Annonces</a>
-        <a th:href="@{/articles}">Articles juridiques</a>
         <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mon espace</a>
         <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Mon espace</a>
         <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Connexion</a>
