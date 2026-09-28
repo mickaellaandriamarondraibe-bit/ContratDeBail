@@ -26,6 +26,9 @@ public class BienForm {
 
     private String inventaire;
 
+    @Size(max = 500, message = "L'adresse de l'image ne doit pas dépasser 500 caractères.")
+    private String imageUrl;
+
     public String getAdresse() {
         return adresse;
     }
@@ -73,4 +76,13 @@ public class BienForm {
     public void setInventaire(String inventaire) {
         this.inventaire = inventaire;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
+

@@ -1,13 +1,72 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Annonces')}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main><h1>Annonces disponibles</h1>
-<p th:if="${#lists.isEmpty(annonces)}">Aucune annonce publiee pour le moment.</p>
-<div class="tableau" th:unless="${#lists.isEmpty(annonces)}"><table>
-<thead><tr><th>Logement</th><th>Type</th><th>Loyer mensuel</th><th>Disponible le</th><th>Annonce</th></tr></thead>
-<tbody><tr th:each="a : ${annonces}">
-<td th:text="${a.bien.adresse}"></td><td th:text="${a.bien.typeLogement}"></td>
-<td th:text="${a.loyer} + ' Ar'"></td><td th:text="${a.dateDebut}"></td>
-<td><a th:href="@{/annonces/{id}(id=${a.id})}">Consulter</a></td>
-</tr></tbody></table></div></main></body></html>
+<body>
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="listings-page">
+    <section class="listings-hero">
+        <span class="eyebrow">Locations vérifiées</span>
+        <h1>Trouvez un logement avec des conditions faciles à comprendre</h1>
+        <p>Chaque annonce publiée a déjà reçu un premier contrôle des règles applicables.</p>
+        <div class="listing-search" role="search">
+            <label class="sr-only" for="searchLocation">Ville ou quartier</label>
+            <input id="searchLocation" type="search" placeholder="Ville ou quartier">
+            <label class="sr-only" for="searchType">Type de bien</label>
+            <select id="searchType">
+                <option value="">Tous les biens</option>
+                <option value="Appartement">Appartement</option>
+                <option value="Maison">Maison</option>
+                <option value="Studio">Studio</option>
+                <option value="Local professionnel">Local professionnel</option>
+            </select>
+            <label class="sr-only" for="searchPrice">Loyer maximal</label>
+            <select id="searchPrice">
+                <option value="">Tous les prix</option>
+                <option value="500000">Jusqu'à 500 000 Ar</option>
+                <option value="700000">Jusqu'à 700 000 Ar</option>
+                <option value="1000000">Jusqu'à 1 000 000 Ar</option>
+                <option value="1500000">Jusqu'à 1 500 000 Ar</option>
+            </select>
+            <button class="btn accent" id="searchListings" type="button">Rechercher</button>
+        </div>
+    </section>
+
+    <div class="listing-heading">
+        <div>
+            <h2>Propositions disponibles</h2>
+            <p id="listingCount" th:text="${#lists.size(annonces)} + ' logement(s) trouvé(s)'"></p>
+        </div>
+        <a class="btn secondary" th:if="${session.bailleurId != null}"
+           th:href="@{/bailleur/annonces/nouvelle}">Publier mon bien</a>
+    </div>
+
+    <p class="listing-empty" id="listingEmpty" th:classappend="${#lists.isEmpty(annonces)} ? '' : ' hidden'">
+        Aucune annonce ne correspond à votre recherche.
+    </p>
+
+    <div class="listing-grid" id="listingGrid" th:unless="${#lists.isEmpty(annonces)}">
+        <article class="listing-card" th:each="a : ${annonces}"
+                 th:attr="data-location=${a.bien.adresse},data-type=${a.bien.typeBien},data-price=${a.loyer}">
+            <a class="listing-photo" th:href="@{/annonces/{id}(id=${a.id})}" tabindex="-1" aria-hidden="true">
+                <img th:if="${a.bien.imageUrl != null and !#strings.isEmpty(a.bien.imageUrl)}"
+                     th:src="${a.bien.imageUrl}" th:alt="${a.bien.typeBien + ' situé à ' + a.bien.adresse}">
+                <span class="photo-placeholder" th:unless="${a.bien.imageUrl != null and !#strings.isEmpty(a.bien.imageUrl)}">
+                    <b>Photo du bien</b><small>À venir</small>
+                </span>
+            </a>
+            <div class="listing-body">
+                <div class="listing-tags">
+                    <span class="listing-tag verified">Vérifiée</span>
+                    <span class="listing-tag" th:text="${a.bien.typeBien}"></span>
+                </div>
+                <h3 th:text="${a.bien.typeBien + ' à ' + a.bien.adresse}"></h3>
+                <p class="listing-location" th:text="${a.bien.adresse}"></p>
+                <p class="listing-price"><strong th:text="${a.loyer} + ' Ar'"></strong><small>/ mois</small></p>
+                <a class="btn listing-button" th:href="@{/annonces/{id}(id=${a.id})}">Voir la proposition</a>
+            </div>
+        </article>
+    </div>
+</main>
+<script th:src="@{/js/annonces.js}"></script>
+</body>
+</html>

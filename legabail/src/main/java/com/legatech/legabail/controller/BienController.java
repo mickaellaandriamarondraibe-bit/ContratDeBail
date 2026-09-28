@@ -64,6 +64,7 @@ public class BienController {
         form.setTypeLogement(bien.getTypeLogement());
         form.setDatePermisHabiter(bien.getDatePermisHabiter());
         form.setInventaire(bien.getInventaire());
+        form.setImageUrl(bien.getImageUrl());
         model.addAttribute("bienForm", form);
         model.addAttribute("bienId", id);
         model.addAttribute("typesLogement", TypeLogement.values());
@@ -95,3 +96,4 @@ public class BienController {
         }
     }
 }
+

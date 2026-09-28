@@ -23,7 +23,8 @@ CREATE TABLE bien (
     usage               VARCHAR(40) NOT NULL,
     type_logement       VARCHAR(15) NOT NULL CHECK (type_logement IN ('NU', 'MEUBLE')),
     date_permis_habiter DATE,
-    inventaire          TEXT
+    inventaire          TEXT,
+    image_url           TEXT
 );
 
 -- 3. Conditions proposées par le bailleur et visibles sur l'accueil
@@ -128,3 +129,4 @@ CREATE INDEX idx_candidature_annonce ON candidature(annonce_id);
 CREATE INDEX idx_candidature_locataire ON candidature(locataire_id);
 
 COMMIT;
+

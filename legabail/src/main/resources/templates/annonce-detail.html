@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Annonce')}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main class="etroit"><h1 th:text="${annonce.bien.adresse}"></h1>
-<p th:text="${annonce.bien.typeBien + ' - ' + annonce.bien.typeLogement}"></p>
-<dl th:replace="~{locataire/fragments :: conditions(${annonce})}"></dl>
-<div class="actions"><a th:href="@{/annonces}">Toutes les annonces</a>
-<a th:if="${annonce.statut.name() == 'PUBLIEE'}" th:href="@{/annonces/{id}/candidater(id=${annonce.id})}">Candidater</a></div>
-</main></body></html>
+<body>
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="listing-detail-page">
+    <a class="back-link" th:href="@{/annonces}">Retour aux annonces</a>
+    <div class="listing-detail">
+        <div class="detail-photo">
+            <img th:if="${annonce.bien.imageUrl != null and !#strings.isEmpty(annonce.bien.imageUrl)}"
+                 th:src="${annonce.bien.imageUrl}"
+                 th:alt="${annonce.bien.typeBien + ' situé à ' + annonce.bien.adresse}">
+            <span class="photo-placeholder" th:unless="${annonce.bien.imageUrl != null and !#strings.isEmpty(annonce.bien.imageUrl)}">
+                <b>Photo du bien</b><small>À venir</small>
+            </span>
+        </div>
+        <section class="detail-panel">
+            <div class="listing-tags">
+                <span class="listing-tag verified">Première vérification effectuée</span>
+                <span class="listing-tag" th:text="${annonce.bien.typeBien}"></span>
+            </div>
+            <h1 th:text="${annonce.bien.typeBien + ' à ' + annonce.bien.adresse}"></h1>
+            <p class="listing-location" th:text="${annonce.bien.adresse}"></p>
+            <p class="listing-price"><strong th:text="${annonce.loyer} + ' Ar'"></strong><small>/ mois</small></p>
+            <dl class="listing-facts">
+                <div><dt>Charges</dt><dd th:text="${annonce.charges} + ' Ar'"></dd></div>
+                <div><dt>Caution + avance</dt><dd th:text="${annonce.caution.add(annonce.avance)} + ' Ar'"></dd></div>
+                <div><dt>Disponibilité</dt><dd th:text="${annonce.dateDebut}"></dd></div>
+                <div><dt>Fin du bail</dt><dd th:text="${annonce.dateFin ?: 'Durée indéterminée'}"></dd></div>
+                <div><dt>Mobilier</dt><dd th:text="${annonce.bien.typeLogement.name() == 'MEUBLE' ? 'Meublé avec inventaire' : 'Logement nu'}"></dd></div>
+                <div><dt>Sous-location</dt><dd th:text="${annonce.sousLocation ?: 'Non renseignée'}"></dd></div>
+            </dl>
+            <div class="listing-notice">Le montant affiché sera repris dans votre formulaire. Vous pourrez accepter les conditions ou demander une modification.</div>
+            <a class="btn accent detail-action" th:if="${annonce.statut.name() == 'PUBLIEE'}"
+               th:href="@{/annonces/{id}/candidater(id=${annonce.id})}">Je souhaite louer ce bien</a>
+        </section>
+    </div>
+</main>
+</body>
+</html>
