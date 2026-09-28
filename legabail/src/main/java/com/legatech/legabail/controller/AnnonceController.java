@@ -27,6 +27,9 @@ public class AnnonceController {
 
     @GetMapping("/bailleur/annonces/nouvelle")
     public String afficherNouvelleAnnonce(Model model, HttpSession session) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         preparerFormulaire(model, session, new AnnonceForm());
         return "bailleur/formulaire-annonce";
     }
@@ -36,6 +39,9 @@ public class AnnonceController {
                                      BindingResult bindingResult,
                                      HttpSession session,
                                      Model model) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         if (bindingResult.hasErrors()) {
             preparerBiens(model, session);
             return "bailleur/formulaire-annonce";
@@ -63,12 +69,18 @@ public class AnnonceController {
 
     @PostMapping("/bailleur/annonces/{id}/publier")
     public String publierAnnonce(@PathVariable Long id, HttpSession session) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         annonceService.publierAnnonce(id, BailleurController.getBailleurId(session));
         return "redirect:/espace-bailleur";
     }
 
     @PostMapping("/bailleur/annonces/{id}/archiver")
     public String archiverAnnonce(@PathVariable Long id, HttpSession session) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         annonceService.archiverAnnonce(id, BailleurController.getBailleurId(session));
         return "redirect:/espace-bailleur";
     }

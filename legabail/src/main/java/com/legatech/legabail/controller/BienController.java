@@ -23,7 +23,10 @@ public class BienController {
     }
 
     @GetMapping("/bailleur/biens/nouveau")
-    public String afficherNouveauBien(Model model) {
+    public String afficherNouveauBien(Model model, HttpSession session) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         model.addAttribute("bienForm", new BienForm());
         model.addAttribute("typesLogement", TypeLogement.values());
         return "bailleur/formulaire-bien";
@@ -34,6 +37,9 @@ public class BienController {
                                   BindingResult bindingResult,
                                   HttpSession session,
                                   Model model) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("typesLogement", TypeLogement.values());
             return "bailleur/formulaire-bien";
@@ -45,6 +51,9 @@ public class BienController {
 
     @GetMapping("/bailleur/biens/{id}/modifier")
     public String afficherModification(@PathVariable Long id, Model model, HttpSession session) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         var bien = bienService.trouverParId(id);
         verifierProprietaire(bien.getBailleur().getId(), session);
 
@@ -67,6 +76,9 @@ public class BienController {
                                BindingResult bindingResult,
                                HttpSession session,
                                Model model) {
+        if (!BailleurController.estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("bienId", id);
             model.addAttribute("typesLogement", TypeLogement.values());

@@ -56,6 +56,9 @@ public class BailleurController {
 
     @GetMapping("/espace-bailleur")
     public String afficherEspaceBailleur(Model model, HttpSession session) {
+        if (!estConnecte(session)) {
+            return "redirect:/connexion";
+        }
         Long bailleurId = getBailleurId(session);
         model.addAttribute("bailleur", utilisateurService.trouverParId(bailleurId));
         model.addAttribute("biens", bienService.listerBiensDuBailleur(bailleurId));
@@ -69,5 +72,9 @@ public class BailleurController {
             throw new IllegalStateException("Aucun bailleur n'est connecté.");
         }
         return bailleurId;
+    }
+
+    static boolean estConnecte(HttpSession session) {
+        return session.getAttribute(BAILLEUR_ID) instanceof Long;
     }
 }
