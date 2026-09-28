@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Action impossible')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main><h1>Action impossible</h1><p role="alert" th:text="${message}"></p>
+<a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Revenir aux candidatures</a>
+<a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Revenir aux candidatures</a>
+</main></body></html>

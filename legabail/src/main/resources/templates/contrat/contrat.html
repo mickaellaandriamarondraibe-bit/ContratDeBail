@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Contrat de bail')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="document"><h1>Contrat de bail</h1>
+<p th:text="${contrat.numero}"></p><p class="statut" th:text="${contrat.statut}"></p>
+<p th:text="'Genere le ' + ${#temporals.format(contrat.dateGeneration, 'dd/MM/yyyy HH:mm')}"></p>
+<article class="texte-contrat" th:text="${contrat.contenu}"></article>
+<section><h2>Signatures</h2>
+<p th:if="${#lists.isEmpty(signatures)}">En attente des signatures du bailleur et du locataire.</p>
+<div class="signature" th:each="s : ${signatures}">
+  <strong th:text="${s.utilisateur.nom + ' ' + s.utilisateur.prenom}"></strong>
+  <span th:text="${s.utilisateur.role}"></span>
+  <p th:text="${s.statut} + ' - ' + ${#temporals.format(s.dateSignature, 'dd/MM/yyyy HH:mm')}"></p>
+</div>
+<form class="sans-impression" th:if="${!dejaSigne and contrat.statut == 'A_SIGNER' and impression != true}" th:action="@{/contrats/{id}/signer(id=${contrat.id})}" th:object="${signatureForm}" method="post">
+  <input th:replace="~{locataire/fragments :: csrf}"><div th:replace="~{locataire/fragments :: erreurs}"></div>
+  <label class="case"><input type="checkbox" th:field="*{confirmation}" required>J'ai lu le contrat et je confirme ma signature.</label>
+  <button type="submit">Signer le contrat</button>
+</form></section>
+<div class="actions sans-impression">
+  <a th:href="@{/candidatures/{id}(id=${contrat.proposition.candidature.id})}">Retour au dossier</a>
+  <a th:if="${impression != true}" th:href="@{/contrats/{id}/imprimer(id=${contrat.id})}">Imprimer / PDF</a>
+  <button th:if="${impression == true}" type="button" onclick="window.print()">Imprimer / PDF</button>
+</div></main>
+<script th:if="${impression == true}">window.addEventListener('load', function () { window.print(); });</script>
+</body></html>

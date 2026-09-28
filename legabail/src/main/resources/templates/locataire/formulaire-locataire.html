@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Candidater')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="etroit"><h1>Envoyer une candidature</h1>
+<h2 th:text="${annonce.bien.adresse}"></h2>
+<dl th:replace="~{locataire/fragments :: conditions(${annonce})}"></dl>
+<form th:action="@{/annonces/{id}/candidater(id=${annonce.id})}" th:object="${candidatureForm}" method="post">
+  <input th:replace="~{locataire/fragments :: csrf}"><div th:replace="~{locataire/fragments :: erreurs}"></div>
+  <label>Nombre d'occupants<input th:field="*{nombreOccupants}" type="number" min="1" required></label>
+  <label>Usage prevu<input th:field="*{usagePrevu}" maxlength="50" required></label>
+  <label>Message au bailleur<textarea th:field="*{message}" maxlength="5000" rows="4"></textarea></label>
+  <button type="submit">Envoyer ma candidature</button>
+</form></main></body></html>

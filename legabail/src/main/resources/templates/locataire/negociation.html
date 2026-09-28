@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Negociation')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="etroit"><h1>Nouvelle proposition</h1>
+<p th:text="${candidature.annonce.bien.adresse}"></p>
+<form th:if="${candidature.statut != 'ACCEPTEE' and candidature.statut != 'REFUSEE'}" th:action="@{/propositions/{id}/modifier(id=${proposition.id})}" th:object="${propositionForm}" method="post">
+  <input th:replace="~{locataire/fragments :: csrf}"><div th:replace="~{locataire/fragments :: erreurs}"></div>
+  <div class="grille">
+    <label>Loyer mensuel (Ar)<input th:field="*{loyer}" type="number" min="0.01" step="0.01" required></label>
+    <label>Charges (Ar)<input th:field="*{charges}" type="number" min="0" step="0.01" required></label>
+    <label>Caution (Ar)<input th:field="*{caution}" type="number" min="0" step="0.01" required></label>
+    <label>Avance (Ar)<input th:field="*{avance}" type="number" min="0" step="0.01" required></label>
+    <label>Debut du bail<input th:field="*{dateDebut}" type="date" required></label>
+    <label>Fin du bail<input th:field="*{dateFin}" type="date"></label>
+  </div>
+  <label>Sous-location<input th:field="*{sousLocation}" maxlength="30"></label>
+  <label>Clauses particulieres<textarea th:field="*{clausesSpeciales}" maxlength="10000" rows="5"></textarea></label>
+  <div class="actions"><button type="submit">Envoyer la proposition</button><a th:href="@{/candidatures/{id}(id=${candidature.id})}">Annuler</a></div>
+</form></main></body></html>

@@ -297,66 +297,66 @@ La table `utilisateur` est utilisée pour identifier le locataire.
 
 ## Entités et repositories
 
-- [ ] Créer `Candidature`
-- [ ] Créer `Proposition`
-- [ ] Créer `Contrat`
-- [ ] Créer `Signature`
-- [ ] Créer `CandidatureRepository`
-- [ ] Créer `PropositionRepository`
-- [ ] Créer `ContratRepository`
-- [ ] Créer `SignatureRepository`
+- [x] Créer `Candidature`
+- [x] Créer `Proposition`
+- [x] Créer `Contrat`
+- [x] Créer `Signature`
+- [x] Créer `CandidatureRepository`
+- [x] Créer `PropositionRepository`
+- [x] Créer `ContratRepository`
+- [x] Créer `SignatureRepository`
 
 ## Formulaires Java
 
-- [ ] Créer `LocataireForm`
-- [ ] Créer `CandidatureForm`
-- [ ] Créer `PropositionForm`
-- [ ] Créer `SignatureForm`
+- [x] Créer `LocataireForm`
+- [x] Créer `CandidatureForm`
+- [x] Créer `PropositionForm`
+- [x] Créer `SignatureForm`
 
 ## Services
 
-- [ ] Créer `CandidatureService`
-- [ ] Créer `PropositionService`
-- [ ] Créer `ContratService`
-- [ ] Créer `SignatureService`
+- [x] Créer `CandidatureService`
+- [x] Créer `PropositionService`
+- [x] Créer `ContratService`
+- [x] Créer `SignatureService`
 
 ## Parcours locataire
 
-- [ ] Enregistrer le locataire
-- [ ] Enregistrer une candidature
-- [ ] Accepter les conditions
-- [ ] Demander une modification
-- [ ] Créer une nouvelle version de la proposition
-- [ ] Afficher le statut de la candidature
+- [x] Enregistrer le locataire
+- [x] Enregistrer une candidature
+- [x] Accepter les conditions
+- [x] Demander une modification
+- [x] Créer une nouvelle version de la proposition
+- [x] Afficher le statut de la candidature
 
 ## Accord des parties
 
-- [ ] Enregistrer l'acceptation du bailleur
-- [ ] Enregistrer l'acceptation du locataire
-- [ ] Vérifier que les deux acceptent la même proposition
-- [ ] Bloquer le contrat si une acceptation manque
-- [ ] Déclencher la génération après le double accord
+- [x] Enregistrer l'acceptation du bailleur
+- [x] Enregistrer l'acceptation du locataire
+- [x] Vérifier que les deux acceptent la même proposition
+- [x] Bloquer le contrat si une acceptation manque
+- [x] Déclencher la génération après le double accord
 
 ## Contrat
 
-- [ ] Générer le numéro du contrat
-- [ ] Récupérer les identités
-- [ ] Récupérer les informations du logement
-- [ ] Récupérer les conditions acceptées
-- [ ] Construire le contenu traditionnel du contrat
-- [ ] Afficher le contrat avec Thymeleaf
-- [ ] Ajouter l'impression en PDF
-- [ ] Enregistrer la signature du bailleur
-- [ ] Enregistrer la signature du locataire
-- [ ] Passer le contrat à `SIGNE` après les deux signatures
+- [x] Générer le numéro du contrat
+- [x] Récupérer les identités
+- [x] Récupérer les informations du logement
+- [x] Récupérer les conditions acceptées
+- [x] Construire le contenu traditionnel du contrat
+- [x] Afficher le contrat avec Thymeleaf
+- [x] Ajouter l'impression en PDF
+- [x] Enregistrer la signature du bailleur
+- [x] Enregistrer la signature du locataire
+- [x] Passer le contrat à `SIGNE` après les deux signatures
 
 ## Contrôleurs MVC
 
-- [ ] Créer `LocataireController`
-- [ ] Créer `CandidatureController`
-- [ ] Créer `PropositionController`
-- [ ] Créer `ContratController`
-- [ ] Créer `SignatureController`
+- [x] Créer `LocataireController`
+- [x] Créer `CandidatureController`
+- [x] Créer `PropositionController`
+- [x] Créer `ContratController`
+- [x] Créer `SignatureController`
 
 Routes MVC :
 
@@ -381,12 +381,12 @@ GET  /contrats/{id}/imprimer
 
 ## Pages Thymeleaf
 
-- [ ] Créer `formulaire-locataire.html`
-- [ ] Créer `espace-locataire.html`
-- [ ] Créer `candidature-detail.html`
-- [ ] Créer `negociation.html`
-- [ ] Transformer le contrat du prototype en `contrat.html`
-- [ ] Afficher les signatures
+- [x] Créer `formulaire-locataire.html`
+- [x] Créer `espace-locataire.html`
+- [x] Créer `candidature-detail.html`
+- [x] Créer `negociation.html`
+- [x] Transformer le contrat du prototype en `contrat.html`
+- [x] Afficher les signatures
 
 ## Travail indépendant
 
@@ -403,17 +403,17 @@ Cette annonce sera remplacée par une donnée de PostgreSQL pendant l'intégrati
 
 ## Tests
 
-- [ ] Envoyer une candidature
-- [ ] Accepter une proposition
-- [ ] Demander une modification
-- [ ] Créer une deuxième version
-- [ ] Tester l'accord du bailleur seulement
-- [ ] Tester l'accord du locataire seulement
-- [ ] Tester l'accord des deux parties
-- [ ] Vérifier que le contrat n'est pas généré sans double accord
-- [ ] Générer le contrat
-- [ ] Signer comme bailleur
-- [ ] Signer comme locataire
+- [x] Envoyer une candidature
+- [x] Accepter une proposition
+- [x] Demander une modification
+- [x] Créer une deuxième version
+- [x] Tester l'accord du bailleur seulement
+- [x] Tester l'accord du locataire seulement
+- [x] Tester l'accord des deux parties
+- [x] Vérifier que le contrat n'est pas généré sans double accord
+- [x] Générer le contrat
+- [x] Signer comme bailleur
+- [x] Signer comme locataire
 
 ## Livrable
 

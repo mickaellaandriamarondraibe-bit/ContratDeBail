@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titre)">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${titre} + ' | LegaBail'">LegaBail</title>
+  <link rel="stylesheet" th:href="@{/css/locataire.css}">
+</head>
+<body>
+<header th:fragment="navigation">
+  <a class="marque" th:href="@{/locataire/candidatures}">LegaBail</a>
+  <nav aria-label="Navigation principale">
+    <a th:href="@{/annonces}">Annonces</a>
+    <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mes candidatures</a>
+    <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Candidatures recues</a>
+    <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/inscription/locataire}">Inscription locataire</a>
+  </nav>
+</header>
+<input th:fragment="csrf" type="hidden" name="_csrf" th:value="${session.csrfLocataire}">
+<div th:fragment="erreurs" class="erreurs" role="alert" th:if="${#fields.hasAnyErrors()}">
+  <p th:each="erreur : ${#fields.allErrors()}" th:text="${erreur}"></p>
+</div>
+<dl th:fragment="conditions(p)" class="conditions">
+  <div><dt>Loyer mensuel</dt><dd th:text="${p.loyer} + ' Ar'"></dd></div>
+  <div><dt>Charges</dt><dd th:text="${p.charges} + ' Ar'"></dd></div>
+  <div><dt>Caution</dt><dd th:text="${p.caution} + ' Ar'"></dd></div>
+  <div><dt>Avance</dt><dd th:text="${p.avance} + ' Ar'"></dd></div>
+  <div><dt>Debut</dt><dd th:text="${p.dateDebut}"></dd></div>
+  <div><dt>Fin</dt><dd th:text="${p.dateFin ?: 'Indeterminee'}"></dd></div>
+  <div><dt>Sous-location</dt><dd th:text="${p.sousLocation ?: 'Non renseignee'}"></dd></div>
+  <div><dt>Clauses particulieres</dt><dd class="multiligne" th:text="${p.clausesSpeciales ?: 'Aucune'}"></dd></div>
+</dl>
+</body></html>

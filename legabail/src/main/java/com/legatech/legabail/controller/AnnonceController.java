@@ -53,7 +53,11 @@ public class AnnonceController {
 
     @GetMapping("/annonces/{id}")
     public String afficherAnnonce(@PathVariable Long id, Model model) {
-        model.addAttribute("annonce", annonceService.trouverParId(id));
+        var annonce = annonceService.trouverParId(id);
+        if (annonce.getStatut() != StatutAnnonce.PUBLIEE) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND);
+        }
+        model.addAttribute("annonce", annonce);
         return "annonce-detail";
     }
 

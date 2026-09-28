@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Annonce')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="etroit"><h1 th:text="${annonce.bien.adresse}"></h1>
+<p th:text="${annonce.bien.typeBien + ' - ' + annonce.bien.typeLogement}"></p>
+<dl th:replace="~{locataire/fragments :: conditions(${annonce})}"></dl>
+<div class="actions"><a th:href="@{/annonces}">Toutes les annonces</a>
+<a th:if="${annonce.statut.name() == 'PUBLIEE'}" th:href="@{/annonces/{id}/candidater(id=${annonce.id})}">Candidater</a></div>
+</main></body></html>

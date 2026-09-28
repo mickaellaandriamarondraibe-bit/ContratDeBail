@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Candidature')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main><h1 th:text="'Candidature n° ' + ${candidature.id}"></h1>
+<p th:text="${candidature.annonce.bien.adresse}"></p><span class="statut" th:text="${candidature.statut}"></span>
+<section><h2>Locataire</h2><p th:text="${candidature.locataire.nom + ' ' + candidature.locataire.prenom}"></p>
+<p th:text="${candidature.nombreOccupants} + ' occupant(s) - ' + ${candidature.usagePrevu}"></p>
+<p class="multiligne" th:text="${candidature.message}"></p></section>
+<section><h2 th:text="'Proposition - version ' + ${proposition.numeroVersion}"></h2>
+<dl th:replace="~{locataire/fragments :: conditions(${proposition})}"></dl>
+<p th:text="${proposition.bailleurAccepte ? 'Bailleur : accord enregistre' : 'Bailleur : en attente'}"></p>
+<p th:text="${proposition.locataireAccepte ? 'Locataire : accord enregistre' : 'Locataire : en attente'}"></p>
+<div class="actions" th:if="${candidature.statut != 'ACCEPTEE' and candidature.statut != 'REFUSEE'}">
+  <form th:if="${estLocataire and !proposition.locataireAccepte}" th:action="@{/propositions/{id}/accepter-locataire(id=${proposition.id})}" method="post">
+    <input th:replace="~{locataire/fragments :: csrf}"><button type="submit">Accepter les conditions</button>
+  </form>
+  <form th:if="${!estLocataire and !proposition.bailleurAccepte}" th:action="@{/propositions/{id}/accepter-bailleur(id=${proposition.id})}" method="post">
+    <input th:replace="~{locataire/fragments :: csrf}"><button type="submit">Accepter les conditions</button>
+  </form>
+  <a th:href="@{/candidatures/{id}/negociation(id=${candidature.id})}">Demander une modification</a>
+</div>
+<a th:if="${contrat != null}" th:href="@{/contrats/{id}(id=${contrat.id})}">Consulter et signer le contrat</a>
+</section>
+<section><h2>Historique des propositions</h2>
+<details th:each="p : ${historique}"><summary th:text="'Version ' + ${p.numeroVersion}"></summary>
+<dl th:replace="~{locataire/fragments :: conditions(${p})}"></dl>
+<p th:text="'Accord bailleur : ' + ${p.bailleurAccepte ? 'oui' : 'non'} + ' / Accord locataire : ' + ${p.locataireAccepte ? 'oui' : 'non'}"></p>
+</details></section></main></body></html>

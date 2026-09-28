@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{locataire/fragments :: head('Annonces')}"></head>
+<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<main><h1>Annonces disponibles</h1>
+<p th:if="${#lists.isEmpty(annonces)}">Aucune annonce publiee pour le moment.</p>
+<div class="tableau" th:unless="${#lists.isEmpty(annonces)}"><table>
+<thead><tr><th>Logement</th><th>Type</th><th>Loyer mensuel</th><th>Disponible le</th><th>Annonce</th></tr></thead>
+<tbody><tr th:each="a : ${annonces}">
+<td th:text="${a.bien.adresse}"></td><td th:text="${a.bien.typeLogement}"></td>
+<td th:text="${a.loyer} + ' Ar'"></td><td th:text="${a.dateDebut}"></td>
+<td><a th:href="@{/annonces/{id}(id=${a.id})}">Consulter</a></td>
+</tr></tbody></table></div></main></body></html>

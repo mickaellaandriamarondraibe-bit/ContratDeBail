@@ -46,6 +46,7 @@ public class BailleurController {
 
         try {
             session.setAttribute(BAILLEUR_ID, utilisateurService.enregistrerBailleur(form).getId());
+            session.removeAttribute("locataireId");
         } catch (IllegalArgumentException exception) {
             bindingResult.reject("inscription.invalide", exception.getMessage());
             return "bailleur/inscription-bailleur";
