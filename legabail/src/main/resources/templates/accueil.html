@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegaBail - Accueil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">LegaBail</a>
+    <nav aria-label="Navigation principale">
+        <a th:href="@{/annonces}">Annonces</a>
+        <a th:href="@{/articles}">Articles juridiques</a>
+        <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mon espace</a>
+        <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Mon espace</a>
+        <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Connexion</a>
+        <form class="nav-form" th:if="${session.locataireId != null or session.bailleurId != null}"
+              th:action="@{/deconnexion}" method="post">
+            <button class="nav-button" type="submit">Déconnexion</button>
+        </form>
+    </nav>
+</header>
+<main class="container">
+    <h1>LegaBail</h1>
+    <p>Bienvenue sur la plateforme de gestion des locations et contrats de bail.</p>
+
+    <section>
+        <h2>Locataire</h2>
+        <p>Consultez les annonces publiées, candidatez et suivez vos candidatures.</p>
+        <a class="button" th:href="@{/inscription/locataire}">Créer un compte locataire</a>
+    </section>
+
+    <section>
+        <h2>Bailleur</h2>
+        <p>Ajoutez vos biens, créez des annonces et suivez les candidatures reçues.</p>
+        <a class="button" th:href="@{/inscription/bailleur}">Créer un compte bailleur</a>
+    </section>
+</main>
+</body>
+</html>

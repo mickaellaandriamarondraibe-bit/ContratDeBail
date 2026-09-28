@@ -1,14 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Candidater')}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main class="etroit"><h1>Envoyer une candidature</h1>
-<h2 th:text="${annonce.bien.adresse}"></h2>
-<dl th:replace="~{locataire/fragments :: conditions(${annonce})}"></dl>
-<form th:action="@{/annonces/{id}/candidater(id=${annonce.id})}" th:object="${candidatureForm}" method="post">
-  <input th:replace="~{locataire/fragments :: csrf}"><div th:replace="~{locataire/fragments :: erreurs}"></div>
-  <label>Nombre d'occupants<input th:field="*{nombreOccupants}" type="number" min="1" required></label>
-  <label>Usage prevu<input th:field="*{usagePrevu}" maxlength="50" required></label>
-  <label>Message au bailleur<textarea th:field="*{message}" maxlength="5000" rows="4"></textarea></label>
-  <button type="submit">Envoyer ma candidature</button>
-</form></main></body></html>
+<body>
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="shell">
+  <div class="page-head">
+    <div><span class="eyebrow">Espace locataire</span><h1>Envoyer une candidature</h1><p th:text="${annonce.bien.adresse}"></p></div>
+  </div>
+  <div class="form-layout">
+    <form class="card form-card" data-rule-form data-rule-scope="annonce" data-rules-target="#rules"
+          th:action="@{/annonces/{id}/candidater(id=${annonce.id})}" th:object="${candidatureForm}" method="post">
+      <input th:replace="~{locataire/fragments :: csrf}">
+      <input type="hidden" name="typeLogement" th:value="${annonce.bien.typeLogement}">
+      <input type="hidden" name="usage" th:value="${annonce.bien.usage}">
+      <input type="hidden" name="typeBien" th:value="${annonce.bien.typeBien}">
+      <input type="hidden" name="datePermisHabiter" th:value="${annonce.bien.datePermisHabiter}">
+      <input type="hidden" name="loyer" th:value="${annonce.loyer}">
+      <input type="hidden" name="charges" th:value="${annonce.charges}">
+      <input type="hidden" name="caution" th:value="${annonce.caution}">
+      <input type="hidden" name="avance" th:value="${annonce.avance}">
+      <input type="hidden" name="prixLogementNu" th:value="${annonce.prixLogementNu}">
+      <input type="hidden" name="dateDebut" th:value="${annonce.dateDebut}">
+      <input type="hidden" name="dateFin" th:value="${annonce.dateFin}">
+      <input type="hidden" name="sousLocation" th:value="${annonce.sousLocation}">
+      <input type="hidden" name="inventaire" th:value="${annonce.bien.inventaire}">
+
+      <div class="section-title"><span class="section-number">1</span><div><h2>Votre candidature</h2><p>Les conditions proposées sont reprises directement de l'annonce.</p></div></div>
+      <dl th:replace="~{locataire/fragments :: conditions(${annonce})}"></dl>
+      <div th:replace="~{locataire/fragments :: erreurs}"></div>
+      <div class="form-grid" style="margin-top:22px">
+        <div class="field">
+          <label for="nombreOccupants">Nombre d'occupants <span class="required">*</span></label>
+          <input id="nombreOccupants" th:field="*{nombreOccupants}" type="number" min="1" required>
+        </div>
+        <div class="field">
+          <label for="usagePrevu">Usage prévu <span class="required">*</span></label>
+          <input id="usagePrevu" th:field="*{usagePrevu}" maxlength="50" required>
+        </div>
+        <div class="field full">
+          <label for="message">Message au bailleur</label>
+          <textarea id="message" th:field="*{message}" maxlength="5000" rows="4"></textarea>
+        </div>
+      </div>
+      <div class="form-actions"><a class="btn secondary" th:href="@{/annonces/{id}(id=${annonce.id})}">Retour</a><button class="btn teal" type="submit">Envoyer ma candidature</button></div>
+    </form>
+    <aside class="card rule-side" aria-live="polite">
+      <div class="rule-side-head"><h2>Contrôle des règles</h2><p>Mis à jour à partir de votre réponse.</p></div>
+      <div class="rules" id="rules"><p class="rule-loading">Analyse en cours...</p></div>
+    </aside>
+  </div>
+</main>
+<script th:src="@{/js/controle-regles.js}"></script>
+</body></html>

@@ -3,61 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Nouvelle annonce - LegaBail</title>
+    <title>Nouvelle proposition - LegaBail</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/formulaire.css}">
 </head>
 <body>
-<main class="container">
-    <h1>Créer une annonce</h1>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">LegaBail</a>
+    <a th:href="@{/espace-bailleur}">Espace bailleur</a>
+</header>
+<main class="shell">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">Nouvelle proposition</span>
+            <h1>Mettre un bien en location</h1>
+            <p>Les questions et les articles applicables apparaissent au fil de votre saisie.</p>
+        </div>
+    </div>
 
-    <form th:action="@{/bailleur/annonces}" th:object="${annonceForm}" method="post">
-        <label for="bienId">Bien concerné</label>
-        <select id="bienId" th:field="*{bienId}" required>
-            <option value="">-- Sélectionner un bien --</option>
-            <option th:each="bien : ${biens}"
-                    th:value="${bien.id}"
-                    th:text="${bien.adresse}"></option>
-        </select>
-        <p class="field-error" th:errors="*{bienId}"></p>
+    <div class="progress">
+        <div class="progress-line">
+            <span id="stepLabel">Étape 1 sur 4</span>
+            <span id="stepPercent">25 %</span>
+        </div>
+        <div class="bar"><span id="stepBar" style="width:25%"></span></div>
+        <nav class="tabs four" aria-label="Étapes de la proposition">
+            <button class="tab active" type="button" data-step="0">1. Bien</button>
+            <button class="tab" type="button" data-step="1">2. Prix</button>
+            <button class="tab" type="button" data-step="2">3. Contrat</button>
+            <button class="tab" type="button" data-step="3">4. Vérification</button>
+        </nav>
+    </div>
 
-        <label for="loyer">Loyer</label>
-        <input id="loyer" th:field="*{loyer}" type="number" min="0.01" step="0.01" required>
-        <p class="field-error" th:errors="*{loyer}"></p>
+    <div class="form-layout">
+        <form class="card form-card" id="annonceForm" data-rule-form data-rule-scope="annonce"
+              data-rules-target="#rules" th:action="@{/bailleur/annonces}"
+              th:object="${annonceForm}" method="post" novalidate>
 
-        <label for="charges">Charges</label>
-        <input id="charges" th:field="*{charges}" type="number" min="0" step="0.01" required>
-        <p class="field-error" th:errors="*{charges}"></p>
+            <div th:if="${#fields.hasAnyErrors()}" class="errors" role="alert">
+                <p th:each="erreur : ${#fields.allErrors()}" th:text="${erreur}"></p>
+            </div>
 
-        <label for="caution">Caution</label>
-        <input id="caution" th:field="*{caution}" type="number" min="0" step="0.01" required>
-        <p class="field-error" th:errors="*{caution}"></p>
+            <section class="wizard-panel active" data-panel="0">
+                <div class="section-title">
+                    <span class="section-number">1</span>
+                    <div><h2>Le bien proposé</h2><p>Choisissez le logement concerné par cette proposition.</p></div>
+                </div>
+                <div class="form-grid">
+                    <div class="field full">
+                        <label for="bienId">Bien concerné <span class="required">*</span></label>
+                        <select id="bienId" th:field="*{bienId}" required>
+                            <option value="">Choisir un bien...</option>
+                            <option th:each="bien : ${biens}" th:value="${bien.id}" th:text="${bien.adresse}"
+                                    th:attr="data-type-logement=${bien.typeLogement},data-usage=${bien.usage},data-type-bien=${bien.typeBien},data-date-permis-habiter=${bien.datePermisHabiter},data-inventaire=${bien.inventaire}"></option>
+                        </select>
+                        <p class="field-error" th:errors="*{bienId}"></p>
+                    </div>
+                    <div class="bien-preview full hidden" id="bienPreview" aria-live="polite">
+                        <div><b>Type de bien</b><span id="previewType">-</span></div>
+                        <div><b>Usage</b><span id="previewUsage">-</span></div>
+                        <div><b>Logement</b><span id="previewLogement">-</span></div>
+                        <div><b>Permis d'habiter</b><span id="previewPermis">Non renseigné</span></div>
+                    </div>
+                </div>
+            </section>
 
-        <label for="avance">Avance</label>
-        <input id="avance" th:field="*{avance}" type="number" min="0" step="0.01" required>
-        <p class="field-error" th:errors="*{avance}"></p>
+            <section class="wizard-panel" data-panel="1">
+                <div class="section-title">
+                    <span class="section-number">2</span>
+                    <div><h2>Loyer et garanties</h2><p>Les plafonds sont contrôlés pendant la saisie.</p></div>
+                </div>
+                <div class="form-grid">
+                    <div class="field money">
+                        <label for="loyer">Loyer mensuel <span class="required">*</span></label>
+                        <input id="loyer" th:field="*{loyer}" type="number" min="0.01" step="0.01" required><span class="suffix">Ar</span>
+                        <p class="field-error" th:errors="*{loyer}"></p>
+                    </div>
+                    <div class="field money">
+                        <label for="charges">Charges mensuelles <span class="required">*</span></label>
+                        <input id="charges" th:field="*{charges}" type="number" min="0" step="0.01" required><span class="suffix">Ar</span>
+                        <p class="field-error" th:errors="*{charges}"></p>
+                    </div>
+                    <div class="field money">
+                        <label for="caution">Caution <span class="required">*</span></label>
+                        <input id="caution" th:field="*{caution}" type="number" min="0" step="0.01" required><span class="suffix">Ar</span>
+                        <p class="field-error" th:errors="*{caution}"></p>
+                    </div>
+                    <div class="field money">
+                        <label for="avance">Avance <span class="required">*</span></label>
+                        <input id="avance" th:field="*{avance}" type="number" min="0" step="0.01" required><span class="suffix">Ar</span>
+                        <p class="field-error" th:errors="*{avance}"></p>
+                    </div>
+                    <div class="field money full conditional hidden" data-if-furnished>
+                        <label for="prixLogementNu">Prix du même logement non meublé</label>
+                        <input id="prixLogementNu" th:field="*{prixLogementNu}" type="number" min="0" step="0.01"><span class="suffix">Ar</span>
+                        <p class="field-error" th:errors="*{prixLogementNu}"></p>
+                    </div>
+                </div>
+            </section>
 
-        <label for="prixLogementNu">Prix du logement nu</label>
-        <input id="prixLogementNu" th:field="*{prixLogementNu}" type="number" min="0" step="0.01">
+            <section class="wizard-panel" data-panel="2">
+                <div class="section-title">
+                    <span class="section-number">3</span>
+                    <div><h2>Conditions du contrat</h2><p>Précisez la durée, le paiement et la sous-location.</p></div>
+                </div>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="dateDebut">Date de début <span class="required">*</span></label>
+                        <input id="dateDebut" th:field="*{dateDebut}" type="date" required>
+                        <p class="field-error" th:errors="*{dateDebut}"></p>
+                    </div>
+                    <div class="field">
+                        <label for="dateFin">Date de fin</label>
+                        <input id="dateFin" th:field="*{dateFin}" type="date">
+                        <p class="hint">Laissez vide pour une durée indéterminée.</p>
+                    </div>
+                    <div class="field">
+                        <label for="sousLocation">Sous-location</label>
+                        <select id="sousLocation" th:field="*{sousLocation}">
+                            <option value="">Choisir...</option>
+                            <option value="INTERDITE">Interdite</option>
+                            <option value="AUTORISATION_ECRITE">Avec autorisation écrite</option>
+                            <option value="DEMANDEE_SANS_AUTORISATION">Demandée sans autorisation</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="modePaiement">Mode de paiement</label>
+                        <input id="modePaiement" th:field="*{modePaiement}" type="text" placeholder="Virement, Mobile Money...">
+                    </div>
+                    <div class="field full">
+                        <label for="clausesSpeciales">Clauses spéciales</label>
+                        <textarea id="clausesSpeciales" th:field="*{clausesSpeciales}"></textarea>
+                    </div>
+                </div>
+            </section>
 
-        <label for="dateDebut">Date de début</label>
-        <input id="dateDebut" th:field="*{dateDebut}" type="date" required>
-        <p class="field-error" th:errors="*{dateDebut}"></p>
+            <section class="wizard-panel" data-panel="3">
+                <div class="section-title">
+                    <span class="section-number">4</span>
+                    <div><h2>Vérifier la proposition</h2><p>Relisez les principales informations avant l'enregistrement.</p></div>
+                </div>
+                <div class="proposal-summary" id="proposalSummary"></div>
+                <div class="notice">L'annonce sera enregistrée en brouillon. Vous pourrez ensuite la publier depuis votre espace bailleur.</div>
+            </section>
 
-        <label for="dateFin">Date de fin</label>
-        <input id="dateFin" th:field="*{dateFin}" type="date">
+            <div class="form-actions wizard-actions">
+                <button class="btn secondary" id="previousStep" type="button">Retour</button>
+                <button class="btn" id="nextStep" type="button">Continuer</button>
+                <button class="btn teal hidden" id="submitProposal" type="submit">Enregistrer en brouillon</button>
+            </div>
+        </form>
 
-        <label for="sousLocation">Sous-location</label>
-        <input id="sousLocation" th:field="*{sousLocation}" type="text">
-
-        <label for="modePaiement">Mode de paiement</label>
-        <input id="modePaiement" th:field="*{modePaiement}" type="text">
-
-        <label for="clausesSpeciales">Clauses spéciales</label>
-        <textarea id="clausesSpeciales" th:field="*{clausesSpeciales}"></textarea>
-
-        <button type="submit">Enregistrer en brouillon</button>
-        <a th:href="@{/espace-bailleur}">Annuler</a>
-    </form>
+        <aside class="card rule-side" aria-live="polite">
+            <div class="rule-side-head"><h2>Contrôle des règles</h2><p>Uniquement les articles déclenchés par vos réponses.</p></div>
+            <div class="rules" id="rules"><p class="rule-empty">Sélectionnez un bien pour commencer le contrôle.</p></div>
+        </aside>
+    </div>
 </main>
+<script th:src="@{/js/controle-regles.js}"></script>
+<script th:src="@{/js/formulaire-annonce.js}"></script>
 </body>
 </html>

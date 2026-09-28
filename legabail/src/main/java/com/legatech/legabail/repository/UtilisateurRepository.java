@@ -2,6 +2,7 @@ package com.legatech.legabail.repository;
 
 import com.legatech.legabail.entity.RoleUtilisateur;
 import com.legatech.legabail.entity.Utilisateur;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,7 +10,9 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
 
     Optional<Utilisateur> findByEmail(String email);
 
+    Optional<Utilisateur> findByEmailIgnoreCase(String email);
+
     boolean existsByEmail(String email);
 
-    java.util.List<Utilisateur> findByRole(RoleUtilisateur role);
+    List<Utilisateur> findByRole(RoleUtilisateur role);
 }

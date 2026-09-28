@@ -16,5 +16,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Long> {
     @EntityGraph(attributePaths = {"bien.bailleur"})
     List<Annonce> findByStatut(StatutAnnonce statut);
 
+    @EntityGraph(attributePaths = {"bien.bailleur"})
     List<Annonce> findByBienBailleurId(Long bailleurId);
 }

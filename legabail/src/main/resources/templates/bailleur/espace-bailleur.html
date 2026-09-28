@@ -7,13 +7,23 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">LegaBail</a>
+    <nav aria-label="Navigation principale">
+        <a th:href="@{/annonces}">Annonces</a>
+        <a th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
+        <form class="nav-form" th:action="@{/deconnexion}" method="post">
+            <button class="nav-button" type="submit">Déconnexion</button>
+        </form>
+    </nav>
+</header>
 <main class="container">
     <h1 th:text="'Bienvenue ' + ${bailleur.prenom} + ' ' + ${bailleur.nom}"></h1>
 
     <nav>
-        <a th:href="@{/bailleur/biens/nouveau}">Ajouter un bien</a>
-        <a th:href="@{/bailleur/annonces/nouvelle}">Créer une annonce</a>
-        <a th:href="@{/annonces}">Voir les annonces publiées</a>
+        <a class="button" th:href="@{/bailleur/biens/nouveau}">Ajouter un bien</a>
+        <a class="button" th:href="@{/bailleur/annonces/nouvelle}">Créer une annonce</a>
+        <a class="button secondary" th:href="@{/annonces}">Voir les annonces publiées</a>
     </nav>
 
     <section>

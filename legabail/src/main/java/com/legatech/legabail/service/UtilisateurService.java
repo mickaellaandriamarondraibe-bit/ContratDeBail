@@ -5,6 +5,7 @@ import com.legatech.legabail.entity.Utilisateur;
 import com.legatech.legabail.form.BailleurForm;
 import com.legatech.legabail.repository.UtilisateurRepository;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,22 +14,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
+    private final MotDePasseService motsDePasse;
 
-    public UtilisateurService(UtilisateurRepository utilisateurRepository) {
+    public UtilisateurService(UtilisateurRepository utilisateurRepository,
+                              MotDePasseService motsDePasse) {
         this.utilisateurRepository = utilisateurRepository;
+        this.motsDePasse = motsDePasse;
     }
 
     public Utilisateur enregistrerBailleur(BailleurForm form) {
-        if (utilisateurRepository.existsByEmail(form.getEmail())) {
+        String email = form.getEmail().strip().toLowerCase(Locale.ROOT);
+        if (utilisateurRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Cette adresse email est déjà utilisée.");
         }
 
         Utilisateur bailleur = new Utilisateur();
         bailleur.setRole(RoleUtilisateur.BAILLEUR);
-        bailleur.setNom(form.getNom());
-        bailleur.setPrenom(form.getPrenom());
-        bailleur.setEmail(form.getEmail());
-        bailleur.setMotDePasseHash(form.getMotDePasse());
+        bailleur.setNom(form.getNom().strip());
+        bailleur.setPrenom(form.getPrenom().strip());
+        bailleur.setEmail(email);
+        bailleur.setMotDePasseHash(motsDePasse.hacher(form.getMotDePasse()));
         bailleur.setTelephone(form.getTelephone());
         bailleur.setNumeroPiece(form.getNumeroPiece());
         return utilisateurRepository.save(bailleur);
@@ -42,7 +47,7 @@ public class UtilisateurService {
 
     @Transactional(readOnly = true)
     public Utilisateur trouverParEmail(String email) {
-        return utilisateurRepository.findByEmail(email)
+        return utilisateurRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable : " + email));
     }
 

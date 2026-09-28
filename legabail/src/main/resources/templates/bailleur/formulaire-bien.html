@@ -3,45 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${bienId != null ? 'Modifier un bien' : 'Nouveau bien'}">Nouveau bien</title>
+    <title th:text="${bienId != null ? 'Modifier un bien' : 'Nouveau bien'} + ' - LegaBail'">Nouveau bien - LegaBail</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<main class="container">
-    <h1 th:text="${bienId != null ? 'Modifier un bien' : 'Enregistrer un bien'}"></h1>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">LegaBail</a>
+    <a th:href="@{/espace-bailleur}">Espace bailleur</a>
+</header>
+<main class="shell">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">Votre bien</span>
+            <h1 th:text="${bienId != null ? 'Modifier le bien' : 'Enregistrer un bien'}">Enregistrer un bien</h1>
+            <p>Les informations saisies déterminent les règles juridiques applicables.</p>
+        </div>
+    </div>
 
-    <form th:action="${bienId != null ? '/bailleur/biens/' + bienId : '/bailleur/biens'}"
-          th:object="${bienForm}" method="post">
-        <label for="adresse">Adresse</label>
-        <textarea id="adresse" th:field="*{adresse}" required></textarea>
-        <p class="field-error" th:errors="*{adresse}"></p>
+    <div class="progress">
+        <div class="progress-line"><span>Étape 2 sur 3</span><span>66 %</span></div>
+        <div class="bar"><span style="width:66%"></span></div>
+        <nav class="tabs" aria-label="Parcours bailleur">
+            <span class="tab">1. Compte</span>
+            <span class="tab active">2. Bien</span>
+            <span class="tab">3. Annonce</span>
+        </nav>
+    </div>
 
-        <label for="typeBien">Type de bien</label>
-        <input id="typeBien" th:field="*{typeBien}" type="text" required>
-        <p class="field-error" th:errors="*{typeBien}"></p>
+    <div class="form-layout">
+        <form class="card form-card" data-rule-form data-rule-scope="bien" data-rules-target="#rules"
+              th:action="${bienId != null ? '/bailleur/biens/' + bienId : '/bailleur/biens'}"
+              th:object="${bienForm}" method="post">
+            <div class="section-title">
+                <span class="section-number">2</span>
+                <div><h2>Le bien proposé</h2><p>Décrivez le logement sans modifier les informations attendues.</p></div>
+            </div>
 
-        <label for="usage">Usage</label>
-        <input id="usage" th:field="*{usage}" type="text" required>
-        <p class="field-error" th:errors="*{usage}"></p>
+            <div class="form-grid">
+                <div class="field full">
+                    <label for="adresse">Adresse <span class="required">*</span></label>
+                    <textarea id="adresse" th:field="*{adresse}" placeholder="Ville, quartier et adresse" required></textarea>
+                    <p class="field-error" th:errors="*{adresse}"></p>
+                </div>
+                <div class="field">
+                    <label for="typeBien">Type de bien <span class="required">*</span></label>
+                    <input id="typeBien" th:field="*{typeBien}" type="text" placeholder="Maison, appartement..." required>
+                    <p class="field-error" th:errors="*{typeBien}"></p>
+                </div>
+                <div class="field">
+                    <label for="usage">Usage prévu <span class="required">*</span></label>
+                    <input id="usage" th:field="*{usage}" type="text" placeholder="Habitation, professionnel..." required>
+                    <p class="field-error" th:errors="*{usage}"></p>
+                </div>
+                <div class="field">
+                    <label for="typeLogement">Type de logement <span class="required">*</span></label>
+                    <select id="typeLogement" th:field="*{typeLogement}" required>
+                        <option value="">Choisir...</option>
+                        <option th:each="type : ${typesLogement}" th:value="${type}"
+                                th:text="${type.name() == 'MEUBLE' ? 'Meublé' : 'Nu'}"></option>
+                    </select>
+                    <p class="field-error" th:errors="*{typeLogement}"></p>
+                </div>
+                <div class="field">
+                    <label for="datePermisHabiter">Date du permis d'habiter</label>
+                    <input id="datePermisHabiter" th:field="*{datePermisHabiter}" type="date">
+                    <p class="hint">Cette date permet au moteur de calculer l'ancienneté du bâtiment.</p>
+                </div>
+                <div class="field full conditional hidden" data-if-furnished>
+                    <label for="inventaire">Inventaire du mobilier</label>
+                    <textarea id="inventaire" th:field="*{inventaire}" placeholder="Meuble, quantité et état"></textarea>
+                    <p class="hint">Ce champ apparaît lorsque le logement est meublé.</p>
+                </div>
+            </div>
 
-        <label for="typeLogement">Type de logement</label>
-        <select id="typeLogement" th:field="*{typeLogement}" required>
-            <option value="">-- Sélectionner --</option>
-            <option th:each="type : ${typesLogement}"
-                    th:value="${type}"
-                    th:text="${type}"></option>
-        </select>
-        <p class="field-error" th:errors="*{typeLogement}"></p>
+            <div class="form-actions">
+                <a class="btn secondary" th:href="@{/espace-bailleur}">Annuler</a>
+                <button class="btn" type="submit">Enregistrer</button>
+            </div>
+        </form>
 
-        <label for="datePermisHabiter">Date du permis d'habiter</label>
-        <input id="datePermisHabiter" th:field="*{datePermisHabiter}" type="date">
-
-        <label for="inventaire">Inventaire</label>
-        <textarea id="inventaire" th:field="*{inventaire}"></textarea>
-
-        <button type="submit">Enregistrer</button>
-        <a th:href="@{/espace-bailleur}">Annuler</a>
-    </form>
+        <aside class="card rule-side" aria-live="polite">
+            <div class="rule-side-head"><h2>Contrôle des règles</h2><p>Articles déclenchés par vos réponses.</p></div>
+            <div class="rules" id="rules"><p class="rule-loading">Analyse en cours...</p></div>
+        </aside>
+    </div>
 </main>
+<script th:src="@{/js/controle-regles.js}"></script>
 </body>
 </html>
