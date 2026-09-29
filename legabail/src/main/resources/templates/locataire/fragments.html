@@ -15,6 +15,7 @@
     <a th:href="@{/articles}">Articles juridiques</a>
     <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mes candidatures</a>
     <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Espace bailleur</a>
+    <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/contrats}">Mes contrats</a>
     <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
     <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Connexion</a>
     <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/inscription/locataire}">Inscription</a>

@@ -56,6 +56,7 @@ class ParcoursLocataireTests {
 
     private Utilisateur utilisateur(RoleUtilisateur role) {
         Utilisateur u = new Utilisateur(); u.setRole(role); u.setNom("Rakoto"); u.setPrenom(role.name());
+        u.setDateNaissance(LocalDate.now().minusYears(25));
         u.setEmail(UUID.randomUUID() + "@example.test"); u.setMotDePasseHash("test-only"); return utilisateurs.save(u);
     }
     private MockHttpSession session(Utilisateur u) {
@@ -150,6 +151,34 @@ class ParcoursLocataireTests {
         mvc.perform(post("/contrats/{id}/signer", c.getId()).session(l).param("_csrf", "jeton-test").param("confirmation", "true")).andExpect(status().is3xxRedirection());
         mvc.perform(get("/contrats/{id}/imprimer", c.getId()).session(b)).andExpect(status().isOk()).andExpect(content().string(containsString("window.print()")));
     }
+    @Test void candidatureControleMajoriteEtCompleteAncienCompte() {
+        Utilisateur ancien = utilisateur(RoleUtilisateur.LOCATAIRE);
+        ancien.setDateNaissance(null);
+        utilisateurs.save(ancien);
+        CandidatureForm form = new CandidatureForm();
+        form.setUsagePrevu("HABITATION");
+        assertThrows(IllegalArgumentException.class,
+                () -> candidatures.enregistrer(annonce.getId(), ancien.getId(), form));
+        form.setDateNaissance(LocalDate.now().minusYears(18).plusDays(1));
+        assertThrows(IllegalArgumentException.class,
+                () -> candidatures.enregistrer(annonce.getId(), ancien.getId(), form));
+        form.setDateNaissance(LocalDate.now().minusYears(18));
+        candidatures.enregistrer(annonce.getId(), ancien.getId(), form);
+        assertEquals(form.getDateNaissance(), utilisateurs.findById(ancien.getId()).orElseThrow().getDateNaissance());
+    }
+
+    @Test void refuseInscriptionMineur() throws Exception {
+        MockHttpSession s = new MockHttpSession();
+        mvc.perform(get("/inscription/locataire").session(s));
+        mvc.perform(post("/inscription/locataire").session(s)
+                .param("_csrf", (String) s.getAttribute("csrfLocataire"))
+                .param("nom", "Test").param("prenom", "Mineur")
+                .param("email", UUID.randomUUID() + "@example.test").param("motDePasse", "motdepasse-test")
+                .param("dateNaissance", LocalDate.now().minusYears(18).plusDays(1).toString()))
+                .andExpect(status().isOk()).andExpect(content().string(containsString("au moins 18 ans")));
+        assertNull(s.getAttribute("locataireId"));
+    }
+
     @Test void inscriptionEtValidationMvc() throws Exception {
         MockHttpSession s = new MockHttpSession();
         mvc.perform(get("/inscription/locataire").session(s)).andExpect(status().isOk());
@@ -157,7 +186,7 @@ class ParcoursLocataireTests {
         mvc.perform(post("/inscription/locataire").session(s).param("_csrf", jeton).param("email", "invalide")).andExpect(status().isOk());
         String email = UUID.randomUUID() + "@example.test";
         mvc.perform(post("/inscription/locataire").session(s).param("_csrf", jeton).param("nom", "Test").param("prenom", "Alice")
-                .param("email", email).param("motDePasse", "motdepasse-test")).andExpect(redirectedUrl("/locataire/candidatures"));
+                .param("dateNaissance", LocalDate.now().minusYears(18).toString()).param("email", email).param("motDePasse", "motdepasse-test")).andExpect(redirectedUrl("/locataire/candidatures"));
         assertNotNull(s.getAttribute("locataireId"));
         assertTrue(utilisateurs.findByEmail(email).orElseThrow().getMotDePasseHash().startsWith("pbkdf2-sha256$"));
     }

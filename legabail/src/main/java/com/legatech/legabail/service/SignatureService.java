@@ -26,6 +26,7 @@ public class SignatureService {
         Utilisateur u = PartiesContrat.verifier(c, utilisateurId);
         if (signatures.existsByContratIdAndUtilisateurIdAndStatut(id, utilisateurId, "SIGNEE")) { return; }
         if (!"A_SIGNER".equals(contrat.getStatut())) { throw new IllegalArgumentException("Ce contrat ne peut plus etre signe."); }
+        MajoriteLocataire.verifier(c.getLocataire().getDateNaissance());
         Signature s = new Signature();
         s.setContrat(contrat); s.setUtilisateur(u); s.setDateSignature(OffsetDateTime.now());
         signatures.saveAndFlush(s);

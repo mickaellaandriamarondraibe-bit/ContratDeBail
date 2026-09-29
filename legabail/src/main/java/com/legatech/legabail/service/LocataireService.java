@@ -22,11 +22,13 @@ public class LocataireService {
     }
 
     public Utilisateur enregistrer(LocataireForm form) {
+        MajoriteLocataire.verifier(form.getDateNaissance());
         String email = form.getEmail().strip().toLowerCase(Locale.ROOT);
         if (utilisateurs.existsByEmail(email)) {
             throw new IllegalArgumentException("Cette adresse email est deja utilisee.");
         }
         Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setDateNaissance(form.getDateNaissance());
         utilisateur.setRole(RoleUtilisateur.LOCATAIRE);
         utilisateur.setNom(form.getNom().strip());
         utilisateur.setPrenom(form.getPrenom().strip());

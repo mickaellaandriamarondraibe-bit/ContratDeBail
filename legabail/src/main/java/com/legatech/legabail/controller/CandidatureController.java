@@ -24,7 +24,9 @@ public class CandidatureController {
     public String formulaire(@PathVariable Long id, Model model, HttpSession session) {
         if (session.getAttribute("locataireId") == null) { return "redirect:/inscription/locataire"; }
         model.addAttribute("annonce", candidatures.annoncePubliee(id));
-        model.addAttribute("candidatureForm", new CandidatureForm());
+        CandidatureForm form = new CandidatureForm();
+        form.setDateNaissance(candidatures.dateNaissance(SessionPartie.locataire(session)));
+        model.addAttribute("candidatureForm", form);
         return "locataire/formulaire-locataire";
     }
     @PostMapping("/annonces/{id}/candidater")

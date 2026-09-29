@@ -3,6 +3,12 @@ package com.legatech.legabail.form;
 import jakarta.validation.constraints.*;
 
 public class LocataireForm {
+    @NotNull(message = "La date de naissance est obligatoire.")
+    @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+    private java.time.LocalDate dateNaissance;
+    public java.time.LocalDate getDateNaissance() { return dateNaissance; }
+    public void setDateNaissance(java.time.LocalDate dateNaissance) { this.dateNaissance = dateNaissance; }
+
     @NotBlank @Size(max = 100)
     private String nom;
     @NotBlank @Size(max = 100)

@@ -43,6 +43,7 @@ public class ContratService {
             throw new IllegalArgumentException(
                     "Le contrat exige le double accord sur la derniere proposition.");
         }
+        MajoriteLocataire.verifier(candidature.getLocataire().getDateNaissance());
         return contrats.findByPropositionId(proposition.getId()).orElseGet(() -> {
             Contrat contrat = new Contrat();
             contrat.setProposition(proposition);

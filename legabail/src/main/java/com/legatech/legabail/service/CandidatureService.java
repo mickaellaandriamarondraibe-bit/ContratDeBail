@@ -32,10 +32,23 @@ public class CandidatureService {
         return a;
     }
 
+    @Transactional(readOnly = true)
+    public java.time.LocalDate dateNaissance(Long id) {
+        return utilisateurs.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)).getDateNaissance();
+    }
+
     public Candidature enregistrer(Long annonceId, Long locataireId, @Valid CandidatureForm form) {
         Annonce a = annoncePubliee(annonceId);
         Utilisateur u = utilisateurs.findById(locataireId).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         if (u.getRole() != RoleUtilisateur.LOCATAIRE) { throw new ResponseStatusException(HttpStatus.FORBIDDEN); }
+        if (u.getDateNaissance() == null) {
+            MajoriteLocataire.verifier(form.getDateNaissance());
+            u.setDateNaissance(form.getDateNaissance());
+        }
+        if (form.getDateNaissance() != null && !form.getDateNaissance().equals(u.getDateNaissance())) {
+            throw new IllegalArgumentException("La date de naissance doit correspondre à celle de votre compte.");
+        }
+        MajoriteLocataire.verifier(u.getDateNaissance());
         if (candidatures.existsByAnnonceIdAndLocataireId(annonceId, locataireId)) {
             throw new IllegalArgumentException("Vous avez deja candidate pour cette annonce.");
         }

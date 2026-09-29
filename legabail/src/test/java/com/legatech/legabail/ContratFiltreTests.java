@@ -80,6 +80,26 @@ class ContratFiltreTests {
                 .andExpect(content().string(not(containsString("Antsirabe, Centre"))));
     }
 
+    @Test
+    void filtreAgeEtNaissanceEtIgnoreDatesInconnues() throws Exception {
+        Utilisateur bailleur = utilisateur(RoleUtilisateur.BAILLEUR, "Bailleur âge");
+        Contrat cible = contrat(bailleur, "Adresse cible", LocalDate.now(), "SIGNE");
+        contrat(bailleur, "Naissance inconnue", LocalDate.now(), "SIGNE");
+        Utilisateur locataire = cible.getProposition().getCandidature().getLocataire();
+        LocalDate naissance = LocalDate.now().minusYears(25);
+        locataire.setDateNaissance(naissance);
+        utilisateurs.save(locataire);
+        for (String critere : new String[]{"age", "dateNaissance"}) {
+            mvc.perform(get("/bailleur/contrats").session(session(bailleur))
+                    .param(critere, critere.equals("age") ? "25" : naissance.toString()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(containsString("Adresse cible")))
+                    .andExpect(content().string(not(containsString("Naissance inconnue"))));
+        }
+        mvc.perform(get("/bailleur/contrats").session(session(bailleur)).param("age", "24"))
+                .andExpect(content().string(containsString("0 contrat(s) trouvé(s) sur 2")));
+    }
+
     private Contrat contrat(Utilisateur bailleur, String adresse, LocalDate date, String statut) {
         Utilisateur locataire = utilisateur(RoleUtilisateur.LOCATAIRE, "Locataire filtre");
         Bien bien = new Bien();

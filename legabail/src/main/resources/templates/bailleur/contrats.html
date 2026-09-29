@@ -36,6 +36,10 @@
             <label for="dateFin">Généré jusqu'au</label>
             <input id="dateFin" name="dateFin" type="date" th:value="${dateFin}">
 
+            <label for="age">Âge actuel du locataire (années révolues)</label>
+            <input id="age" name="age" type="number" min="0" step="1" th:value="${age}" placeholder="Ex. 25">
+            <label for="dateNaissance">Date de naissance du locataire</label>
+            <input id="dateNaissance" name="dateNaissance" type="date" th:value="${dateNaissance}">
             <label for="statut">Statut</label>
             <select id="statut" name="statut">
                 <option value="" th:selected="${statut == null or statut == ''}">Tous les statuts</option>
@@ -54,7 +58,7 @@
 
     <p class="filter-result"
        th:text="${resultats + ' contrat(s) trouvé(s) sur ' + totalContrats}"></p>
-    <p th:if="${#lists.isEmpty(contrats)}">Aucun contrat généré pour le moment.</p>
+    <p th:if="${#lists.isEmpty(contrats)}">Aucun contrat ne correspond à vos critères.</p>
     <section th:unless="${#lists.isEmpty(contrats)}">
         <article th:each="contrat : ${contrats}">
             <h2 th:text="${contrat.numero}">LB-2026-0001</h2>
@@ -66,6 +70,11 @@
                 <strong>Locataire :</strong>
                 <span th:text="${contrat.proposition.candidature.locataire.prenom
                     + ' ' + contrat.proposition.candidature.locataire.nom}"></span>
+            </p>
+            <p>
+                <strong>Date de naissance / âge actuel :</strong>
+                <span th:with="locataire=${contrat.proposition.candidature.locataire}"
+                      th:text="${locataire.dateNaissance == null ? 'Non renseignée' : #temporals.format(locataire.dateNaissance, 'dd/MM/yyyy') + ' · ' + locataire.age + ' ans'}"></span>
             </p>
             <p>
                 <strong>Statut :</strong>

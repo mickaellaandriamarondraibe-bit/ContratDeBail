@@ -43,6 +43,8 @@ public class ContratController {
             @RequestParam(required = false) LocalDate dateDebut,
             @RequestParam(required = false) LocalDate dateFin,
             @RequestParam(required = false) String statut,
+            @RequestParam(required = false) Integer age,
+            @RequestParam(required = false) LocalDate dateNaissance,
             Model model, HttpSession session) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
@@ -51,6 +53,8 @@ public class ContratController {
                 BailleurController.getBailleurId(session));
         String recherche = ville == null ? "" : ville.strip();
         List<Contrat> contratsFiltres = contratsBailleur.stream()
+                .filter(contrat -> age == null || age.equals(contrat.getProposition().getCandidature().getLocataire().getAge()))
+                .filter(contrat -> dateNaissance == null || dateNaissance.equals(contrat.getProposition().getCandidature().getLocataire().getDateNaissance()))
                 .filter(contrat -> recherche.isBlank()
                         || contrat.getProposition().getCandidature().getAnnonce().getBien()
                         .getAdresse().toLowerCase(Locale.ROOT)
@@ -66,6 +70,8 @@ public class ContratController {
         model.addAttribute("contrats", contratsFiltres);
         model.addAttribute("totalContrats", contratsBailleur.size());
         model.addAttribute("resultats", contratsFiltres.size());
+        model.addAttribute("age", age);
+        model.addAttribute("dateNaissance", dateNaissance);
         model.addAttribute("ville", ville);
         model.addAttribute("dateDebut", dateDebut);
         model.addAttribute("dateFin", dateFin);

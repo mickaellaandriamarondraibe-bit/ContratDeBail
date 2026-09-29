@@ -40,6 +40,15 @@ public class Utilisateur {
     @Column(name = "numero_piece", length = 100)
     private String numeroPiece;
 
+    @Column(name = "date_naissance")
+    private java.time.LocalDate dateNaissance;
+
+    public java.time.LocalDate getDateNaissance() { return dateNaissance; }
+    public void setDateNaissance(java.time.LocalDate dateNaissance) { this.dateNaissance = dateNaissance; }
+    public Integer getAge() {
+        return dateNaissance == null ? null : java.time.Period.between(dateNaissance, java.time.LocalDate.now()).getYears();
+    }
+
     public Utilisateur() {
     }
 

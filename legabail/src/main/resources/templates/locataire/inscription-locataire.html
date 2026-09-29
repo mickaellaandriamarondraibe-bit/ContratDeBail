@@ -8,6 +8,9 @@
   <div class="grille">
     <label>Nom<input th:field="*{nom}" autocomplete="family-name" maxlength="100" required></label>
     <label>Prenom<input th:field="*{prenom}" autocomplete="given-name" maxlength="100" required></label>
+    <label>Date de naissance<input th:field="*{dateNaissance}" type="date" autocomplete="bday"
+        th:max="${#temporals.format(#temporals.createToday().minusYears(18), 'yyyy-MM-dd')}" required>
+        <span class="hint">Vous devez avoir au moins 18 ans pour louer.</span></label>
     <label>Email<input th:field="*{email}" type="email" autocomplete="email" maxlength="180" required></label>
     <label>Mot de passe<input name="motDePasse" id="motDePasse" type="password" autocomplete="new-password" minlength="8" maxlength="255" required></label>
     <label>Telephone<input th:field="*{telephone}" type="tel" autocomplete="tel" maxlength="30"></label>

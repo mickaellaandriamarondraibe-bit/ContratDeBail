@@ -29,6 +29,9 @@
       <dl th:replace="~{locataire/fragments :: conditions(${annonce})}"></dl>
       <div th:replace="~{locataire/fragments :: erreurs}"></div>
       <div class="form-grid" style="margin-top:22px">
+<div class="field"><label>Date de naissance<input th:field="*{dateNaissance}" type="date" autocomplete="bday"
+        th:max="${#temporals.format(#temporals.createToday().minusYears(18), 'yyyy-MM-dd')}" required>
+        <span class="hint">Vous devez avoir au moins 18 ans pour louer.</span></label></div>
         <div class="field">
           <label for="nombreOccupants">Nombre d'occupants <span class="required">*</span></label>
           <input id="nombreOccupants" th:field="*{nombreOccupants}" type="number" min="1" required>

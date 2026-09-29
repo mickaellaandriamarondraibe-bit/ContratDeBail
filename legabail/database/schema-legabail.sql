@@ -11,6 +11,7 @@ CREATE TABLE utilisateur (
     email             VARCHAR(180) NOT NULL UNIQUE,
     mot_de_passe_hash VARCHAR(255) NOT NULL,
     telephone         VARCHAR(30),
+    date_naissance    DATE,
     numero_piece      VARCHAR(100)
 );
 
