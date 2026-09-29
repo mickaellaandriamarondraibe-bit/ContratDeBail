@@ -14,7 +14,7 @@
     --ok: #e0f5e9;
     --error: #fff0ee;
     --warning: #fff6e5;
-    --info: #e8f3ff;
+    --info: #e8f4ee;
     --shadow: 0 12px 32px rgba(16, 58, 47, .08);
     --header-height: 72px;
 }
@@ -36,10 +36,11 @@ p, h1, h2, h3, td, dd { overflow-wrap: anywhere; }
     align-items: center;
     justify-content: space-between;
     gap: 28px;
-    height: var(--header-height);
+    height: auto;
     min-height: var(--header-height);
     padding: 0 max(28px, calc((100vw - 1320px) / 2));
-    background: var(--navy-dark);
+    background: linear-gradient(115deg, var(--navy-dark), var(--navy));
+    box-shadow: 0 4px 20px rgba(3, 70, 56, .12);
     color: #fff;
 }
 .topbar a, body > header a { color: #fff; }
@@ -54,18 +55,23 @@ p, h1, h2, h3, td, dd { overflow-wrap: anywhere; }
 .topbar nav, body > header nav {
     display: flex;
     align-items: stretch;
-    gap: 28px;
-    height: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 0;
 }
 .topbar nav > a, body > header nav > a {
     display: inline-flex;
     align-items: center;
+    padding: 9px 12px;
+    border-radius: 8px;
     border-bottom: 3px solid transparent;
     font-size: 14px;
     font-weight: 650;
     text-decoration: none;
 }
 .topbar nav > a:hover, body > header nav > a:hover { border-bottom-color: #72d49f; }
+.topbar nav > a:hover, body > header nav > a:hover { background: rgba(255,255,255,.09); }
+a:focus-visible, button:focus-visible { outline: 3px solid #72d49f; outline-offset: 3px; }
 .nav-form { display: flex; align-items: center; margin: 0; }
 .nav-button {
     min-height: 40px;
@@ -223,16 +229,7 @@ body:has(header a[href^="/bailleur/"]), body:has(header a[href="/espace-bailleur
     --soft: #edf7f2;
     --info: #e8f4ee;
 }
-body:has(header a[href^="/locataire/"]), body.theme-locataire {
-    --navy: #a0461e;
-    --navy-dark: #823515;
-    --blue: #c05621;
-    --teal: #b84d18;
-    --background: #fff7f2;
-    --soft: #fff0e7;
-    --info: #fff0e7;
-    --line: #eadbd3;
-}
+
 
 @media (max-width: 900px) {
     .form-layout { grid-template-columns: 1fr; }

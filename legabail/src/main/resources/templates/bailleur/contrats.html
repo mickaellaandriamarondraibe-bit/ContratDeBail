@@ -36,7 +36,7 @@
         <summary>
             <span>
                 <strong>Filtrer les contrats</strong>
-                <small th:if="${!filtresActifs}">Adresse, période ou statut</small>
+                <small th:if="${!filtresActifs}">Âge, date de naissance, adresse, période ou statut</small>
                 <small th:if="${filtresActifs}">Des filtres sont actuellement appliqués</small>
             </span>
             <span class="filter-indicator" th:if="${filtresActifs}">Actifs</span>
@@ -64,6 +64,16 @@
                     <option value="TERMINE" th:selected="${statut == 'TERMINE'}">Terminé</option>
                     <option value="RESILIE" th:selected="${statut == 'RESILIE'}">Résilié</option>
                 </select>
+            </div>
+            <div class="filter-field">
+                <label for="age">Âge actuel du locataire</label>
+                <input id="age" name="age" type="number" min="0" step="1"
+                       th:value="${age}" placeholder="Ex. 25" aria-describedby="age-aide">
+                <small id="age-aide">Âge exact en années révolues aujourd’hui.</small>
+            </div>
+            <div class="filter-field">
+                <label for="dateNaissance">Date de naissance du locataire</label>
+                <input id="dateNaissance" name="dateNaissance" type="date" th:value="${dateNaissance}">
             </div>
             <div class="filter-actions">
                 <button class="button" type="submit">Appliquer</button>
@@ -117,6 +127,8 @@
                               th:text="${contrat.proposition.candidature.locataire.prenom
                               + ' ' + contrat.proposition.candidature.locataire.nom}"></span>
                         <small th:text="${contrat.proposition.candidature.locataire.email}"></small>
+                        <small th:with="locataire=${contrat.proposition.candidature.locataire}"
+                               th:text="${locataire.dateNaissance == null ? 'Date de naissance non renseignée' : #temporals.format(locataire.dateNaissance, 'dd/MM/yyyy') + ' · ' + locataire.age + ' ans'}"></small>
                     </td>
                     <td data-label="Statut">
                         <span th:class="${'status-badge status-' + #strings.toLowerCase(contrat.statut)}"
@@ -144,12 +156,12 @@
 
         <nav class="contracts-pagination" th:if="${totalPages > 1}" aria-label="Pagination des contrats">
             <a th:classappend="${pageCourante == 0} ? ' disabled'"
-               th:href="${pageCourante == 0} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},page=${pageCourante - 1})}">
+               th:href="${pageCourante == 0} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},age=${age},dateNaissance=${dateNaissance},page=${pageCourante - 1})}">
                 Précédent
             </a>
             <span th:text="${'Page ' + (pageCourante + 1) + ' sur ' + totalPages}">Page 1 sur 1</span>
             <a th:classappend="${pageCourante + 1 >= totalPages} ? ' disabled'"
-               th:href="${pageCourante + 1 >= totalPages} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},page=${pageCourante + 1})}">
+               th:href="${pageCourante + 1 >= totalPages} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},age=${age},dateNaissance=${dateNaissance},page=${pageCourante + 1})}">
                 Suivant
             </a>
         </nav>

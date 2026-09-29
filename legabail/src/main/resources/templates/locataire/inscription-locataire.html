@@ -22,6 +22,11 @@
                 <input id="nom" th:field="*{nom}" autocomplete="family-name" maxlength="100" required>
                 <label for="prenom">Prénom</label>
                 <input id="prenom" th:field="*{prenom}" autocomplete="given-name" maxlength="100" required>
+                <label for="dateNaissance">Date de naissance</label>
+                <input id="dateNaissance" th:field="*{dateNaissance}" type="date" autocomplete="bday"
+                       th:max="${#temporals.format(#temporals.createToday().minusYears(18), 'yyyy-MM-dd')}"
+                       aria-describedby="majorite-aide" required>
+                <p id="majorite-aide" class="hint">Vous devez avoir au moins 18 ans pour louer un logement.</p>
                 <label for="email">Adresse email</label>
                 <input id="email" th:field="*{email}" type="email" autocomplete="email" maxlength="180" required>
                 <label for="motDePasse">Mot de passe</label>

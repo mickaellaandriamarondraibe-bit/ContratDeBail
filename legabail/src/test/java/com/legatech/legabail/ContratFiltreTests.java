@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.hamcrest.Matchers.hasSize;
 
 import com.legatech.legabail.entity.Annonce;
 import com.legatech.legabail.entity.Bien;
@@ -98,6 +100,31 @@ class ContratFiltreTests {
         }
         mvc.perform(get("/bailleur/contrats").session(session(bailleur)).param("age", "24"))
                 .andExpect(content().string(containsString("0 contrat(s) trouvé(s) sur 2")));
+    }
+
+    @Test
+    void champsVisiblesEtPaginationConserventLesCriteres() throws Exception {
+        Utilisateur bailleur = utilisateur(RoleUtilisateur.BAILLEUR, "Pagination âge");
+        LocalDate naissance = LocalDate.now().minusYears(30);
+        for (int i = 0; i < 11; i++) {
+            Contrat contrat = contrat(bailleur, "Logement " + i, LocalDate.now(), "SIGNE");
+            Utilisateur locataire = contrat.getProposition().getCandidature().getLocataire();
+            locataire.setDateNaissance(naissance);
+            utilisateurs.save(locataire);
+        }
+        mvc.perform(get("/bailleur/contrats").session(session(bailleur))
+                        .param("age", "30").param("dateNaissance", naissance.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("name=\"age\"")))
+                .andExpect(content().string(containsString("name=\"dateNaissance\"")))
+                .andExpect(content().string(containsString("age=30&amp;dateNaissance=" + naissance + "&amp;page=1")));
+        mvc.perform(get("/bailleur/contrats").session(session(bailleur))
+                        .param("age", "30").param("dateNaissance", naissance.toString()).param("page", "1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("contrats", hasSize(1)));
+        mvc.perform(get("/inscription/locataire"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("name=\"dateNaissance\"")));
     }
 
     private Contrat contrat(Utilisateur bailleur, String adresse, LocalDate date, String statut) {
