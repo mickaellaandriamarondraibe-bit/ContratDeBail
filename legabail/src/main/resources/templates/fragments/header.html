@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="topbar" th:fragment="navigation">
+  <div class="header-identity">
+    <a class="marque" th:href="@{/}">LegaBail</a>
+    <span class="session-role" th:if="${session.bailleurId != null}">Connecté en tant que <strong>bailleur</strong></span>
+    <span class="session-role" th:if="${session.locataireId != null}">Connecté en tant que <strong>locataire</strong></span>
+  </div>
+  <nav aria-label="Navigation principale">
+    <a th:href="@{/annonces}">Annonces</a>
+    <a th:href="@{/articles}">Articles juridiques</a>
+    <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mes candidatures</a>
+    <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Espace bailleur</a>
+    <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/contrats}">Mes contrats</a>
+    <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
+    <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Connexion</a>
+    <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/inscription/locataire}">Inscription</a>
+    <form class="nav-form" th:if="${session.locataireId != null or session.bailleurId != null}"
+          th:action="@{/deconnexion}" method="post">
+      <button class="nav-button" type="submit">Déconnexion</button>
+    </form>
+  </nav>
+</header>
+</body>
+</html>

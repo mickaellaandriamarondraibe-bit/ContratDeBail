@@ -10,7 +10,7 @@
 </head>
 
 <body th:class="${session.bailleurId != null ? 'theme-bailleur' : (session.locataireId != null ? 'theme-locataire' : '')}">
-<header th:replace="~{locataire/fragments :: navigation}"></header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 
 <main>
     <a class="article-back" th:href="@{/articles}">← Retour aux articles</a>

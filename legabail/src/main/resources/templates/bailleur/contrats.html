@@ -8,16 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/contrats.css}">
 </head>
 <body>
-<header class="topbar">
-    <a class="brand" th:href="@{/}">LegaBail</a>
-    <nav aria-label="Navigation principale">
-        <a th:href="@{/espace-bailleur}">Espace bailleur</a>
-        <a th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
-        <form class="nav-form" th:action="@{/deconnexion}" method="post">
-            <button class="nav-button" type="submit">Déconnexion</button>
-        </form>
-    </nav>
-</header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 
 <main class="container contracts-page">
     <div class="contracts-heading">

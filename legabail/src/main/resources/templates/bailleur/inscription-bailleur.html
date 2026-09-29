@@ -7,10 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="theme-bailleur">
-<header class="topbar">
-    <a class="brand" th:href="@{/}">LegaBail</a>
-    <nav><a th:href="@{/annonces}">Annonces</a><a th:href="@{/connexion}">Connexion</a></nav>
-</header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 <main class="auth-page">
     <div class="auth-layout">
         <aside class="auth-aside">

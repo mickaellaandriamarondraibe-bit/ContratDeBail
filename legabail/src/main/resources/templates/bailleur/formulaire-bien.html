@@ -8,10 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/formulaire.css}">
 </head>
 <body>
-<header class="topbar">
-    <a class="brand" th:href="@{/}">LegaBail</a>
-    <a th:href="@{/espace-bailleur}">Espace bailleur</a>
-</header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 <main class="shell">
     <div class="page-head">
         <div>

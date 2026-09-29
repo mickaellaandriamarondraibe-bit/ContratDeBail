@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Negociation')}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
+<body><header th:replace="~{fragments/header :: navigation}"></header>
 <main class="etroit"><h1>Nouvelle proposition</h1>
 <p th:text="${candidature.annonce.bien.adresse}"></p>
 <form th:if="${candidature.statut != 'ACCEPTEE' and candidature.statut != 'REFUSEE'}" th:action="@{/propositions/{id}/modifier(id=${proposition.id})}" th:object="${propositionForm}" method="post">

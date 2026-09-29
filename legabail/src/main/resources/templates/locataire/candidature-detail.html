@@ -2,7 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Candidature')}"></head>
 <body th:class="${session.bailleurId != null ? 'theme-bailleur' : 'theme-locataire'}">
-<header th:replace="~{locataire/fragments :: navigation}"></header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 <main class="shell record-page">
     <div class="record-lead">
         <div>

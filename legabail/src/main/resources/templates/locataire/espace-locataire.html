@@ -2,7 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head(${titre})}"></head>
 <body class="theme-locataire">
-<header th:replace="~{locataire/fragments :: navigation}"></header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 <main class="shell">
     <div class="page-head">
         <div><span class="eyebrow">Espace locataire</span><h1 th:text="${titre}"></h1><p>Suivez l’avancement de vos demandes et retrouvez chaque dossier.</p></div>

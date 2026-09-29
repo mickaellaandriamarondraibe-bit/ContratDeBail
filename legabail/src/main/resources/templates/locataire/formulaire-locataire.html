@@ -2,7 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Candidater')}"></head>
 <body>
-<header th:replace="~{locataire/fragments :: navigation}"></header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 <main class="shell">
   <div class="page-head">
     <div><span class="eyebrow">Espace locataire</span><h1>Envoyer une candidature</h1><p th:text="${annonce.bien.adresse}"></p></div>

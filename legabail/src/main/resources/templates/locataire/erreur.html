@@ -2,7 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Action impossible')}"></head>
 <body th:class="${session.bailleurId != null ? 'theme-bailleur' : (session.locataireId != null ? 'theme-locataire' : '')}">
-<header th:replace="~{locataire/fragments :: navigation}"></header>
+<header th:replace="~{fragments/header :: navigation}"></header>
 <main class="etroit record-page">
     <div class="page-head"><div><span class="eyebrow">LegaBail</span><h1>Action impossible</h1><p>La demande n’a pas pu être traitée.</p></div></div>
     <section>
