@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Inscription locataire')}"></head>
-<<<<<<< HEAD
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main class="etroit"><h1>Inscription locataire</h1>
-<form th:action="@{/inscription/locataire}" th:object="${locataireForm}" method="post">
-  <input th:replace="~{locataire/fragments :: csrf}"><div th:replace="~{locataire/fragments :: erreurs}"></div>
-  <div class="grille">
-    <label>Nom<input th:field="*{nom}" autocomplete="family-name" maxlength="100" required></label>
-    <label>Prenom<input th:field="*{prenom}" autocomplete="given-name" maxlength="100" required></label>
-    <label>Date de naissance<input th:field="*{dateNaissance}" type="date" autocomplete="bday"
-        th:max="${#temporals.format(#temporals.createToday().minusYears(18), 'yyyy-MM-dd')}" required>
-        <span class="hint">Vous devez avoir au moins 18 ans pour louer.</span></label>
-    <label>Email<input th:field="*{email}" type="email" autocomplete="email" maxlength="180" required></label>
-    <label>Mot de passe<input name="motDePasse" id="motDePasse" type="password" autocomplete="new-password" minlength="8" maxlength="255" required></label>
-    <label>Telephone<input th:field="*{telephone}" type="tel" autocomplete="tel" maxlength="30"></label>
-    <label>Numero de piece d'identite<input th:field="*{numeroPiece}" maxlength="100"></label>
-  </div>
-  <button type="submit">Creer mon compte</button>
-  <p>Déjà inscrit ? <a th:href="@{/connexion}">Se connecter</a></p>
-</form></main></body></html>
-=======
 <body class="theme-locataire">
 <header th:replace="~{locataire/fragments :: navigation}"></header>
 <main class="auth-page">
@@ -58,4 +38,3 @@
 </main>
 </body>
 </html>
->>>>>>> 6f6daf1 (web)

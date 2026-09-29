@@ -19,24 +19,6 @@
     --header-height: 72px;
 }
 
-<<<<<<< HEAD
-/* Palette commune aux espaces bailleur et locataire. */
-:root{--navy:#14532d;--blue:#237a49;--teal:#087f5b;--background:#f2f7f4;--info:#edf7f1}
-.topbar,body>header{background:linear-gradient(115deg,#103e26,#17613b);padding:18px clamp(18px,4vw,60px);box-shadow:0 4px 20px #14532d18;border-bottom:1px solid #ffffff24}
-.brand,.marque{font-size:24px;letter-spacing:-.8px;white-space:nowrap}
-.topbar nav,body>header nav{gap:8px}
-.topbar nav>a,body>header nav>a{padding:9px 12px;border-radius:9px;text-decoration:none;font-size:14px;font-weight:650;transition:background .15s}
-.topbar nav>a:hover,body>header nav>a:hover{background:#ffffff1f}
-.nav-form{margin:0}.nav-button{background:#ffffff14;border:1px solid #ffffff40;font-size:14px;padding:8px 13px}
-a:focus-visible,button:focus-visible{outline:3px solid #63c99b;outline-offset:3px}
-@media(max-width:620px){.topbar nav,body>header nav{width:100%;gap:4px}.topbar nav>a,body>header nav>a{padding:8px}}
-.contract-filters{padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 35px rgba(11,49,86,.08)}
-.contract-filters h2{margin-top:0}
-.contract-filters form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:none}
-.contract-filters form>div{display:flex;align-items:center;gap:10px;grid-column:1/-1}
-.filter-result{font-weight:800;color:var(--navy)}
-@media(max-width:620px){.contract-filters form{grid-template-columns:1fr}}
-=======
 * { box-sizing: border-box; }
 html { color-scheme: light; }
 body {
@@ -354,4 +336,3 @@ body:has(header a[href^="/locataire/"]), body.theme-locataire {
     .auth-aside { display: none; }
     .auth-form { padding: 24px; }
 }
->>>>>>> 6f6daf1 (web)
