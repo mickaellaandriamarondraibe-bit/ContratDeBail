@@ -37,7 +37,7 @@
             <p id="listingCount" th:text="${#lists.size(annonces)} + ' logement(s) trouvé(s)'"></p>
         </div>
         <a class="btn secondary" th:if="${session.bailleurId != null}"
-           th:href="@{/bailleur/annonces/nouvelle}">Publier mon bien</a>
+           th:href="@{/bailleur/annonces/nouvelle}">+ Publier mon bien</a>
     </div>
 
     <p class="listing-empty" id="listingEmpty" th:classappend="${#lists.isEmpty(annonces)} ? '' : ' hidden'">
@@ -46,7 +46,10 @@
 
     <div class="listing-grid" id="listingGrid" th:unless="${#lists.isEmpty(annonces)}">
         <article class="listing-card" th:each="a : ${annonces}"
-                 th:attr="data-location=${a.bien.adresse},data-type=${a.bien.typeBien},data-price=${a.loyer}">
+                 th:attr="data-id=${a.id},data-location=${a.bien.adresse},data-type=${a.bien.typeBien},data-price=${a.loyer}">
+            <button class="favorite-button" type="button" data-favorite
+                    th:attr="aria-label=${'Ajouter ' + a.bien.adresse + ' aux favoris'}"
+                    title="Ajouter aux favoris">♡</button>
             <a class="listing-photo" th:href="@{/annonces/{id}(id=${a.id})}" tabindex="-1" aria-hidden="true">
                 <img th:if="${a.bien.imageUrl != null and !#strings.isEmpty(a.bien.imageUrl)}"
                      th:src="${a.bien.imageUrl}" th:alt="${a.bien.typeBien + ' situé à ' + a.bien.adresse}">
@@ -56,13 +59,13 @@
             </a>
             <div class="listing-body">
                 <div class="listing-tags">
-                    <span class="listing-tag verified">Vérifiée</span>
+                    <span class="listing-tag verified">✓ Vérifiée</span>
                     <span class="listing-tag" th:text="${a.bien.typeBien}"></span>
                 </div>
                 <h3 th:text="${a.bien.typeBien + ' à ' + a.bien.adresse}"></h3>
                 <p class="listing-location" th:text="${a.bien.adresse}"></p>
                 <p class="listing-price"><strong th:text="${a.loyer} + ' Ar'"></strong><small>/ mois</small></p>
-                <a class="btn listing-button" th:href="@{/annonces/{id}(id=${a.id})}">Voir la proposition</a>
+                <a class="btn listing-button" th:href="@{/annonces/{id}(id=${a.id})}">Voir la proposition →</a>
             </div>
         </article>
     </div>

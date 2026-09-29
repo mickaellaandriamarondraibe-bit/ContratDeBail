@@ -1,10 +1,13 @@
 package com.legatech.legabail.service;
 
+import com.legatech.legabail.entity.Annonce;
 import com.legatech.legabail.entity.Bien;
 import com.legatech.legabail.entity.Candidature;
 import com.legatech.legabail.entity.Contrat;
 import com.legatech.legabail.entity.Proposition;
+import com.legatech.legabail.entity.StatutAnnonce;
 import com.legatech.legabail.entity.Utilisateur;
+import com.legatech.legabail.repository.AnnonceRepository;
 import com.legatech.legabail.repository.CandidatureRepository;
 import com.legatech.legabail.repository.ContratRepository;
 import com.legatech.legabail.repository.PropositionRepository;
@@ -25,12 +28,14 @@ public class ContratService {
     private final ContratRepository contrats;
     private final CandidatureRepository candidatures;
     private final PropositionRepository propositions;
+    private final AnnonceRepository annonces;
 
     public ContratService(ContratRepository contrats, CandidatureRepository candidatures,
-                          PropositionRepository propositions) {
+                          PropositionRepository propositions, AnnonceRepository annonces) {
         this.contrats = contrats;
         this.candidatures = candidatures;
         this.propositions = propositions;
+        this.annonces = annonces;
     }
 
     public Contrat generer(Proposition reference) {
@@ -43,6 +48,7 @@ public class ContratService {
             throw new IllegalArgumentException(
                     "Le contrat exige le double accord sur la derniere proposition.");
         }
+<<<<<<< HEAD
         MajoriteLocataire.verifier(candidature.getLocataire().getDateNaissance());
         return contrats.findByPropositionId(proposition.getId()).orElseGet(() -> {
             Contrat contrat = new Contrat();
@@ -52,6 +58,26 @@ public class ContratService {
             candidature.setStatut("ACCEPTEE");
             return contrats.save(contrat);
         });
+=======
+
+        Contrat existant = contrats.findByPropositionId(proposition.getId()).orElse(null);
+        if (existant != null) {
+            return existant;
+        }
+
+        Annonce annonce = annonces.verrouiller(candidature.getAnnonce().getId()).orElseThrow();
+        if (annonce.getStatut() != StatutAnnonce.PUBLIEE) {
+            throw new IllegalArgumentException("Cette annonce n'est plus disponible.");
+        }
+
+        Contrat contrat = new Contrat();
+        contrat.setProposition(proposition);
+        contrat.setNumero(String.format("LB-%d-%04d", Year.now().getValue(), proposition.getId()));
+        contrat.setContenu(construireContenu(proposition));
+        candidature.setStatut("ACCEPTEE");
+        annonce.setStatut(StatutAnnonce.LOUEE);
+        return contrats.save(contrat);
+>>>>>>> 6f6daf1 (web)
     }
 
     @Transactional(readOnly = true)

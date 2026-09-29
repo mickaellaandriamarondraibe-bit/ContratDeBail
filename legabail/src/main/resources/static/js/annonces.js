@@ -32,4 +32,25 @@ document.addEventListener("DOMContentLoaded", () => {
     recherche.addEventListener("input", filtrer);
     type.addEventListener("change", filtrer);
     prix.addEventListener("change", filtrer);
+
+    const favoris = new Set(JSON.parse(localStorage.getItem("legabail-favoris") || "[]"));
+    grille.querySelectorAll("[data-favorite]").forEach(favori => {
+        const carte = favori.closest(".listing-card");
+        const id = carte.dataset.id;
+
+        const actualiser = () => {
+            const actif = favoris.has(id);
+            favori.classList.toggle("active", actif);
+            favori.textContent = actif ? "♥" : "♡";
+            favori.setAttribute("aria-pressed", actif);
+            favori.title = actif ? "Retirer des favoris" : "Ajouter aux favoris";
+        };
+
+        favori.addEventListener("click", () => {
+            favoris.has(id) ? favoris.delete(id) : favoris.add(id);
+            localStorage.setItem("legabail-favoris", JSON.stringify([...favoris]));
+            actualiser();
+        });
+        actualiser();
+    });
 });

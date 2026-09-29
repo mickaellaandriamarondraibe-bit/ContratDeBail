@@ -9,13 +9,18 @@
     <link rel="stylesheet" th:href="@{/css/articles.css}">
 </head>
 
-<body>
-<header>
-    <h1>Articles juridiques</h1>
-    <p>Liste des articles utilisés par le moteur de règles LegaBail.</p>
-</header>
+<body th:class="${session.bailleurId != null ? 'theme-bailleur' : (session.locataireId != null ? 'theme-locataire' : '')}">
+<header th:replace="~{locataire/fragments :: navigation}"></header>
 
 <main>
+    <div class="articles-intro">
+        <div>
+            <span class="eyebrow">Base juridique</span>
+            <h1>Articles juridiques</h1>
+            <p>Liste des textes utilisés par le moteur de règles LegaBail.</p>
+        </div>
+    </div>
+
     <p class="summary" th:if="${articles != null}">
         Nombre d'articles :
         <strong th:text="${#lists.size(articles)}">0</strong>

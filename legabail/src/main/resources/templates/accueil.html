@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegaBail - Accueil</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
+<head th:replace="~{locataire/fragments :: head('Accueil')}"></head>
 <body>
-<header class="topbar">
-    <a class="brand" th:href="@{/}">Bienvenu sur LegaBail</a>
-    <nav aria-label="Navigation principale">
-        <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mon espace</a>
-        <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Mon espace</a>
-        <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Connexion</a>
-        <form class="nav-form" th:if="${session.locataireId != null or session.bailleurId != null}"
-              th:action="@{/deconnexion}" method="post">
-            <button class="nav-button" type="submit">Déconnexion</button>
-        </form>
-    </nav>
-</header>
-<main class="container">
-    <h1>LegaBail</h1>
-    <p>Bienvenue sur la plateforme de gestion des locations et contrats de bail.</p>
-
-    <section>
-        <h2>Locataire</h2>
-        <p>Consultez les annonces publiées, candidatez et suivez vos candidatures.</p>
-        <a class="button" th:href="@{/inscription/locataire}">Créer un compte locataire</a>
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="home-page">
+    <section class="home-hero">
+        <div class="home-hero-content">
+            <span class="eyebrow">Location claire et sécurisée</span>
+            <h1>LegaBail simplifie chaque étape de votre location</h1>
+            <p>Publiez un bien, trouvez un logement et générez un contrat conforme à partir de conditions comprises par les deux parties.</p>
+            <div class="home-actions">
+                <a class="btn" th:href="@{/annonces}">Voir les annonces</a>
+                <a class="btn secondary" th:if="${session.bailleurId != null}" th:href="@{/bailleur/annonces/nouvelle}">Publier un bien</a>
+                <a class="btn secondary" th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Se connecter</a>
+            </div>
+        </div>
     </section>
 
-    <section>
-        <h2>Bailleur</h2>
-        <p>Ajoutez vos biens, créez des annonces et suivez les candidatures reçues.</p>
-        <a class="button" th:href="@{/inscription/bailleur}">Créer un compte bailleur</a>
+    <section class="home-options" th:if="${session.locataireId == null and session.bailleurId == null}">
+        <article class="home-option">
+            <span class="eyebrow">Locataire</span>
+            <h2>Trouvez votre prochain logement</h2>
+            <p>Comparez les annonces, candidatez et suivez toutes vos propositions depuis un seul espace.</p>
+            <a class="button" th:href="@{/inscription/locataire}">Créer un compte locataire</a>
+        </article>
+        <article class="home-option">
+            <span class="eyebrow">Bailleur</span>
+            <h2>Gérez vos locations sereinement</h2>
+            <p>Enregistrez vos biens, publiez vos annonces et transformez un accord en contrat.</p>
+            <a class="button" th:href="@{/inscription/bailleur}">Créer un compte bailleur</a>
+        </article>
     </section>
 </main>
 </body>

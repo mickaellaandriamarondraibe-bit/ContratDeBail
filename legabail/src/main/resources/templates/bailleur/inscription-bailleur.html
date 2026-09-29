@@ -6,43 +6,50 @@
     <title>Inscription bailleur - LegaBail</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<main class="container">
-    <h1>Créer un compte bailleur</h1>
-    <p>Renseignez vos informations pour gérer vos biens et vos annonces.</p>
-
-    <form th:action="@{/inscription/bailleur}" th:object="${bailleurForm}" method="post">
-        <div th:if="${#fields.hasGlobalErrors()}" class="errors">
-            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
-        </div>
-
-        <label for="prenom">Prénom</label>
-        <input id="prenom" th:field="*{prenom}" type="text" required>
-        <p class="field-error" th:errors="*{prenom}"></p>
-
-        <label for="nom">Nom</label>
-        <input id="nom" th:field="*{nom}" type="text" required>
-        <p class="field-error" th:errors="*{nom}"></p>
-
-        <label for="email">Adresse email</label>
-        <input id="email" th:field="*{email}" type="email" required>
-        <p class="field-error" th:errors="*{email}"></p>
-
-        <label for="motDePasse">Mot de passe</label>
-        <input id="motDePasse" th:field="*{motDePasse}" type="password" minlength="8" required>
-        <p class="field-error" th:errors="*{motDePasse}"></p>
-
-        <label for="telephone">Téléphone</label>
-        <input id="telephone" th:field="*{telephone}" type="tel">
-        <p class="field-error" th:errors="*{telephone}"></p>
-
-        <label for="numeroPiece">Numéro de pièce</label>
-        <input id="numeroPiece" th:field="*{numeroPiece}" type="text">
-        <p class="field-error" th:errors="*{numeroPiece}"></p>
-
-        <button type="submit">Créer mon compte</button>
-        <p>Déjà inscrit ? <a th:href="@{/connexion}">Se connecter</a></p>
-    </form>
+<body class="theme-bailleur">
+<header class="topbar">
+    <a class="brand" th:href="@{/}">LegaBail</a>
+    <nav><a th:href="@{/annonces}">Annonces</a><a th:href="@{/connexion}">Connexion</a></nav>
+</header>
+<main class="auth-page">
+    <div class="auth-layout">
+        <aside class="auth-aside">
+            <div class="auth-aside-content">
+                <h1>Publiez vos biens simplement</h1>
+                <p>Centralisez annonces, candidatures et contrats dans votre espace bailleur.</p>
+            </div>
+        </aside>
+        <section class="auth-form">
+            <span class="eyebrow">Espace bailleur</span>
+            <h1>Créer un compte</h1>
+            <p>Renseignez les informations nécessaires à la gestion de vos locations.</p>
+            <form th:action="@{/inscription/bailleur}" th:object="${bailleurForm}" method="post">
+                <div th:if="${#fields.hasGlobalErrors()}" class="errors">
+                    <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+                </div>
+                <label for="prenom">Prénom</label>
+                <input id="prenom" th:field="*{prenom}" type="text" autocomplete="given-name" required>
+                <p class="field-error" th:errors="*{prenom}"></p>
+                <label for="nom">Nom</label>
+                <input id="nom" th:field="*{nom}" type="text" autocomplete="family-name" required>
+                <p class="field-error" th:errors="*{nom}"></p>
+                <label for="email">Adresse email</label>
+                <input id="email" th:field="*{email}" type="email" autocomplete="email" required>
+                <p class="field-error" th:errors="*{email}"></p>
+                <label for="motDePasse">Mot de passe</label>
+                <input id="motDePasse" th:field="*{motDePasse}" type="password" autocomplete="new-password" minlength="8" required>
+                <p class="field-error" th:errors="*{motDePasse}"></p>
+                <label for="telephone">Téléphone</label>
+                <input id="telephone" th:field="*{telephone}" type="tel" autocomplete="tel">
+                <p class="field-error" th:errors="*{telephone}"></p>
+                <label for="numeroPiece">Numéro de pièce</label>
+                <input id="numeroPiece" th:field="*{numeroPiece}" type="text">
+                <p class="field-error" th:errors="*{numeroPiece}"></p>
+                <button type="submit">Créer mon compte</button>
+            </form>
+            <div class="auth-links"><span>Déjà inscrit ?</span><a th:href="@{/connexion}">Se connecter</a></div>
+        </section>
+    </div>
 </main>
 </body>
 </html>

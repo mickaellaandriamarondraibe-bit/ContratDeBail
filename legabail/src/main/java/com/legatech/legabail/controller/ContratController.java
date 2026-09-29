@@ -1,7 +1,7 @@
 package com.legatech.legabail.controller;
 
-import com.legatech.legabail.entity.RoleUtilisateur;
 import com.legatech.legabail.entity.Contrat;
+import com.legatech.legabail.entity.RoleUtilisateur;
 import com.legatech.legabail.form.SignatureForm;
 import com.legatech.legabail.service.ContratService;
 import com.legatech.legabail.service.SignatureService;
@@ -15,12 +15,14 @@ import java.util.List;
 import java.util.Locale;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ContratController {
+
+    private static final int CONTRATS_PAR_PAGE = 10;
 
     private final ContratService contrats;
     private final SignatureService signatures;
@@ -43,12 +45,17 @@ public class ContratController {
             @RequestParam(required = false) LocalDate dateDebut,
             @RequestParam(required = false) LocalDate dateFin,
             @RequestParam(required = false) String statut,
+<<<<<<< HEAD
             @RequestParam(required = false) Integer age,
             @RequestParam(required = false) LocalDate dateNaissance,
+=======
+            @RequestParam(defaultValue = "0") int page,
+>>>>>>> 6f6daf1 (web)
             Model model, HttpSession session) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
+
         List<Contrat> contratsBailleur = contrats.listerBailleur(
                 BailleurController.getBailleurId(session));
         String recherche = ville == null ? "" : ville.strip();
@@ -67,15 +74,34 @@ public class ContratController {
                         || statut.equals(contrat.getStatut()))
                 .toList();
 
-        model.addAttribute("contrats", contratsFiltres);
+        int totalPages = contratsFiltres.isEmpty()
+                ? 0
+                : (contratsFiltres.size() + CONTRATS_PAR_PAGE - 1) / CONTRATS_PAR_PAGE;
+        int pageCourante = totalPages == 0 ? 0 : Math.min(Math.max(page, 0), totalPages - 1);
+        int premierIndex = pageCourante * CONTRATS_PAR_PAGE;
+        int dernierIndex = Math.min(premierIndex + CONTRATS_PAR_PAGE, contratsFiltres.size());
+        List<Contrat> contratsPage = contratsFiltres.subList(premierIndex, dernierIndex);
+        boolean filtresActifs = !recherche.isBlank() || dateDebut != null || dateFin != null
+                || (statut != null && !statut.isBlank());
+
+        model.addAttribute("contrats", contratsPage);
         model.addAttribute("totalContrats", contratsBailleur.size());
         model.addAttribute("resultats", contratsFiltres.size());
+<<<<<<< HEAD
         model.addAttribute("age", age);
         model.addAttribute("dateNaissance", dateNaissance);
         model.addAttribute("ville", ville);
+=======
+        model.addAttribute("ville", recherche);
+>>>>>>> 6f6daf1 (web)
         model.addAttribute("dateDebut", dateDebut);
         model.addAttribute("dateFin", dateFin);
         model.addAttribute("statut", statut);
+        model.addAttribute("filtresActifs", filtresActifs);
+        model.addAttribute("pageCourante", pageCourante);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("debutResultat", contratsPage.isEmpty() ? 0 : premierIndex + 1);
+        model.addAttribute("finResultat", dernierIndex);
         return "bailleur/contrats";
     }
 

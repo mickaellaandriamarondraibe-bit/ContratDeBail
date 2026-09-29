@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Action impossible')}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main><h1>Action impossible</h1><p role="alert" th:text="${message}"></p>
-<a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Revenir aux candidatures</a>
-<a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Revenir aux candidatures</a>
-</main></body></html>
+<body th:class="${session.bailleurId != null ? 'theme-bailleur' : (session.locataireId != null ? 'theme-locataire' : '')}">
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="etroit record-page">
+    <div class="page-head"><div><span class="eyebrow">LegaBail</span><h1>Action impossible</h1><p>La demande n’a pas pu être traitée.</p></div></div>
+    <section>
+        <h2>Vérification nécessaire</h2>
+        <p class="errors" role="alert" th:text="${message}"></p>
+        <a class="btn" th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Revenir aux candidatures</a>
+        <a class="btn" th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Revenir aux candidatures</a>
+        <a class="btn" th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/}">Revenir à l’accueil</a>
+    </section>
+</main>
+</body>
+</html>

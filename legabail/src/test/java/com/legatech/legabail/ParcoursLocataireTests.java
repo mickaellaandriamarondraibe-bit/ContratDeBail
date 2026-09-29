@@ -26,6 +26,7 @@ class ParcoursLocataireTests {
     @Autowired PropositionService propositions;
     @Autowired ContratService contrats;
     @Autowired SignatureService signatures;
+    @Autowired AnnonceService annonceService;
     @Autowired UtilisateurRepository utilisateurs;
     @Autowired BienRepository biens;
     @Autowired AnnonceRepository annonces;
@@ -109,6 +110,9 @@ class ParcoursLocataireTests {
         assertTrue(contrat.getNumero().startsWith("LB-"));
         assertTrue(contrat.getContenu().contains("750000")); assertTrue(contrat.getContenu().contains("12 rue du Lac"));
         assertEquals("ACCEPTEE", candidatureRepository.findById(candidature.getId()).orElseThrow().getStatut());
+        assertEquals(StatutAnnonce.LOUEE, annonces.findById(annonce.getId()).orElseThrow().getStatut());
+        assertTrue(annonceService.listerAnnoncesPubliees().stream()
+                .noneMatch(element -> element.getId().equals(annonce.getId())));
         SignatureForm f = new SignatureForm(); f.setConfirmation(true);
         signatures.signer(contrat.getId(), bailleur.getId(), f);
         assertEquals("A_SIGNER", contratRepository.findById(contrat.getId()).orElseThrow().getStatut());

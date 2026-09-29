@@ -2,13 +2,15 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Formulaire bailleur - LegaBail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<main>
-    <h1>Inscription bailleur</h1>
-    <p>Utilisez la page d'inscription pour créer votre compte.</p>
-    <a th:href="@{/inscription/bailleur}">Accéder au formulaire</a>
+<body class="theme-bailleur">
+<header class="topbar"><a class="brand" th:href="@{/}">LegaBail</a><a th:href="@{/connexion}">Connexion</a></header>
+<main class="etroit record-page">
+    <div class="page-head"><div><span class="eyebrow">Espace bailleur</span><h1>Inscription bailleur</h1><p>Créez votre compte pour enregistrer vos biens.</p></div></div>
+    <section><h2>Commencer</h2><p>Le formulaire sécurisé rassemble les informations nécessaires à votre espace.</p><a class="btn" th:href="@{/inscription/bailleur}">Accéder au formulaire</a></section>
 </main>
 </body>
 </html>

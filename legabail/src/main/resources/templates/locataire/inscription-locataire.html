@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head('Inscription locataire')}"></head>
+<<<<<<< HEAD
 <body><header th:replace="~{locataire/fragments :: navigation}"></header>
 <main class="etroit"><h1>Inscription locataire</h1>
 <form th:action="@{/inscription/locataire}" th:object="${locataireForm}" method="post">
@@ -19,3 +20,42 @@
   <button type="submit">Creer mon compte</button>
   <p>Déjà inscrit ? <a th:href="@{/connexion}">Se connecter</a></p>
 </form></main></body></html>
+=======
+<body class="theme-locataire">
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="auth-page">
+    <div class="auth-layout">
+        <aside class="auth-aside">
+            <div class="auth-aside-content">
+                <h1>Trouvez un logement en confiance</h1>
+                <p>Candidatez, négociez les conditions et signez votre contrat depuis votre espace.</p>
+            </div>
+        </aside>
+        <section class="auth-form">
+            <span class="eyebrow">Espace locataire</span>
+            <h1>Créer un compte</h1>
+            <p>Quelques informations suffisent pour commencer vos candidatures.</p>
+            <form th:action="@{/inscription/locataire}" th:object="${locataireForm}" method="post">
+                <input th:replace="~{locataire/fragments :: csrf}">
+                <div th:replace="~{locataire/fragments :: erreurs}"></div>
+                <label for="nom">Nom</label>
+                <input id="nom" th:field="*{nom}" autocomplete="family-name" maxlength="100" required>
+                <label for="prenom">Prénom</label>
+                <input id="prenom" th:field="*{prenom}" autocomplete="given-name" maxlength="100" required>
+                <label for="email">Adresse email</label>
+                <input id="email" th:field="*{email}" type="email" autocomplete="email" maxlength="180" required>
+                <label for="motDePasse">Mot de passe</label>
+                <input name="motDePasse" id="motDePasse" type="password" autocomplete="new-password" minlength="8" maxlength="255" required>
+                <label for="telephone">Téléphone</label>
+                <input id="telephone" th:field="*{telephone}" type="tel" autocomplete="tel" maxlength="30">
+                <label for="numeroPiece">Numéro de pièce d'identité</label>
+                <input id="numeroPiece" th:field="*{numeroPiece}" maxlength="100">
+                <button type="submit">Creer mon compte</button>
+            </form>
+            <div class="auth-links"><span>Déjà inscrit ?</span><a th:href="@{/connexion}">Se connecter</a></div>
+        </section>
+    </div>
+</main>
+</body>
+</html>
+>>>>>>> 6f6daf1 (web)

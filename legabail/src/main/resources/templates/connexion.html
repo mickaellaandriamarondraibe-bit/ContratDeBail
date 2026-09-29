@@ -9,38 +9,38 @@
 <body>
 <header class="topbar">
     <a class="brand" th:href="@{/}">LegaBail</a>
-    <a th:href="@{/}">Retour</a>
+    <nav><a th:href="@{/annonces}">Annonces</a><a th:href="@{/}">Accueil</a></nav>
 </header>
-<main class="etroit">
-    <div class="page-head">
-        <div>
+<main class="auth-page">
+    <div class="auth-layout">
+        <aside class="auth-aside">
+            <div class="auth-aside-content">
+                <h1>Votre location, au même endroit</h1>
+                <p>Retrouvez vos biens, candidatures et contrats dans un espace clair.</p>
+            </div>
+        </aside>
+        <section class="auth-form">
             <span class="eyebrow">Votre espace</span>
             <h1>Se connecter</h1>
-            <p>Accédez à vos biens, annonces, candidatures et contrats.</p>
-        </div>
+            <p>Utilisez l’adresse email associée à votre compte.</p>
+            <form th:action="@{/connexion}" th:object="${connexionForm}" method="post">
+                <div th:if="${#fields.hasGlobalErrors()}" class="errors" role="alert">
+                    <p th:each="erreur : ${#fields.globalErrors()}" th:text="${erreur}"></p>
+                </div>
+                <label for="email">Adresse email</label>
+                <input id="email" th:field="*{email}" type="email" autocomplete="email" required autofocus>
+                <p class="field-error" th:errors="*{email}"></p>
+                <label for="motDePasse">Mot de passe</label>
+                <input id="motDePasse" th:field="*{motDePasse}" type="password" autocomplete="current-password" required>
+                <p class="field-error" th:errors="*{motDePasse}"></p>
+                <button type="submit">Se connecter</button>
+            </form>
+            <div class="auth-links">
+                <a th:href="@{/inscription/locataire}">Créer un compte locataire</a>
+                <a th:href="@{/inscription/bailleur}">Créer un compte bailleur</a>
+            </div>
+        </section>
     </div>
-
-    <form th:action="@{/connexion}" th:object="${connexionForm}" method="post">
-        <div th:if="${#fields.hasGlobalErrors()}" class="errors" role="alert">
-            <p th:each="erreur : ${#fields.globalErrors()}" th:text="${erreur}"></p>
-        </div>
-
-        <label for="email">Adresse email</label>
-        <input id="email" th:field="*{email}" type="email" autocomplete="email" required autofocus>
-        <p class="field-error" th:errors="*{email}"></p>
-
-        <label for="motDePasse">Mot de passe</label>
-        <input id="motDePasse" th:field="*{motDePasse}" type="password"
-               autocomplete="current-password" required>
-        <p class="field-error" th:errors="*{motDePasse}"></p>
-
-        <button type="submit">Se connecter</button>
-
-        <div class="form-actions">
-            <a th:href="@{/inscription/locataire}">Créer un compte locataire</a>
-            <a th:href="@{/inscription/bailleur}">Créer un compte bailleur</a>
-        </div>
-    </form>
 </main>
 </body>
 </html>

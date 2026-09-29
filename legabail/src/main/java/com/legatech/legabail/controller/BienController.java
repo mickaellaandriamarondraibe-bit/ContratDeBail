@@ -3,6 +3,7 @@ package com.legatech.legabail.controller;
 import com.legatech.legabail.entity.TypeLogement;
 import com.legatech.legabail.form.BienForm;
 import com.legatech.legabail.service.BienService;
+import com.legatech.legabail.service.StockageImageService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -12,14 +13,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class BienController {
 
     private final BienService bienService;
+    private final StockageImageService stockageImageService;
 
-    public BienController(BienService bienService) {
+    public BienController(BienService bienService, StockageImageService stockageImageService) {
         this.bienService = bienService;
+        this.stockageImageService = stockageImageService;
     }
 
     @GetMapping("/bailleur/biens/nouveau")
@@ -35,11 +40,13 @@ public class BienController {
     @PostMapping("/bailleur/biens")
     public String enregistrerBien(@Valid @ModelAttribute("bienForm") BienForm form,
                                   BindingResult bindingResult,
+                                  @RequestParam(name = "image", required = false) MultipartFile image,
                                   HttpSession session,
                                   Model model) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
+        enregistrerImage(image, form, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("typesLogement", TypeLogement.values());
             return "bailleur/formulaire-bien";
@@ -75,11 +82,13 @@ public class BienController {
     public String modifierBien(@PathVariable Long id,
                                @Valid @ModelAttribute("bienForm") BienForm form,
                                BindingResult bindingResult,
+                               @RequestParam(name = "image", required = false) MultipartFile image,
                                HttpSession session,
                                Model model) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
+        enregistrerImage(image, form, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("bienId", id);
             model.addAttribute("typesLogement", TypeLogement.values());
@@ -90,10 +99,20 @@ public class BienController {
         return "redirect:/espace-bailleur";
     }
 
+    private void enregistrerImage(MultipartFile image, BienForm form, BindingResult bindingResult) {
+        try {
+            String imageUrl = stockageImageService.stocker(image);
+            if (imageUrl != null) {
+                form.setImageUrl(imageUrl);
+            }
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            bindingResult.rejectValue("imageUrl", "image.invalide", exception.getMessage());
+        }
+    }
+
     private void verifierProprietaire(Long proprietaireId, HttpSession session) {
         if (!proprietaireId.equals(BailleurController.getBailleurId(session))) {
             throw new IllegalArgumentException("Ce bien n'appartient pas à ce bailleur.");
         }
     }
 }
-

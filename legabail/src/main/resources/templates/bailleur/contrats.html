@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mes contrats - LegaBail</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/contrats.css}">
 </head>
 <body>
 <header class="topbar">
@@ -18,14 +19,30 @@
     </nav>
 </header>
 
-<main class="container">
-    <h1>Mes contrats</h1>
-    <p>Contrats générés à partir des candidatures de vos biens.</p>
+<main class="container contracts-page">
+    <div class="contracts-heading">
+        <div>
+            <span class="eyebrow">Gestion locative</span>
+            <h1>Mes contrats</h1>
+            <p>Suivez et retrouvez les contrats générés depuis vos candidatures.</p>
+        </div>
+        <div class="contracts-total" aria-label="Nombre total de contrats">
+            <strong th:text="${totalContrats}">0</strong>
+            <span th:text="${totalContrats > 1 ? 'contrats' : 'contrat'}">contrats</span>
+        </div>
+    </div>
 
-    <section class="contract-filters">
-        <h2>Recherche intelligente</h2>
-        <p>Combinez plusieurs critères pour retrouver un contrat en quelques secondes.</p>
+    <details class="contract-filters" th:attr="open=${filtresActifs} ? 'open' : null">
+        <summary>
+            <span>
+                <strong>Filtrer les contrats</strong>
+                <small th:if="${!filtresActifs}">Adresse, période ou statut</small>
+                <small th:if="${filtresActifs}">Des filtres sont actuellement appliqués</small>
+            </span>
+            <span class="filter-indicator" th:if="${filtresActifs}">Actifs</span>
+        </summary>
         <form th:action="@{/bailleur/contrats}" method="get">
+<<<<<<< HEAD
             <label for="ville">Ville ou adresse</label>
             <input id="ville" name="ville" type="search"
                    th:value="${ville}" placeholder="Ex. Antananarivo">
@@ -51,11 +68,39 @@
 
             <div>
                 <button class="button" type="submit">Filtrer</button>
+=======
+            <div class="filter-field filter-address">
+                <label for="ville">Ville ou adresse</label>
+                <input id="ville" name="ville" type="search"
+                       th:value="${ville}" placeholder="Ex. Antananarivo">
+            </div>
+            <div class="filter-field">
+                <label for="dateDebut">Généré à partir du</label>
+                <input id="dateDebut" name="dateDebut" type="date" th:value="${dateDebut}">
+            </div>
+            <div class="filter-field">
+                <label for="dateFin">Généré jusqu'au</label>
+                <input id="dateFin" name="dateFin" type="date" th:value="${dateFin}">
+            </div>
+            <div class="filter-field">
+                <label for="statut">Statut</label>
+                <select id="statut" name="statut">
+                    <option value="" th:selected="${statut == null or statut == ''}">Tous les statuts</option>
+                    <option value="A_SIGNER" th:selected="${statut == 'A_SIGNER'}">À signer</option>
+                    <option value="SIGNE" th:selected="${statut == 'SIGNE'}">Signé</option>
+                    <option value="TERMINE" th:selected="${statut == 'TERMINE'}">Terminé</option>
+                    <option value="RESILIE" th:selected="${statut == 'RESILIE'}">Résilié</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button class="button" type="submit">Appliquer</button>
+>>>>>>> 6f6daf1 (web)
                 <a class="button secondary" th:href="@{/bailleur/contrats}">Réinitialiser</a>
             </div>
         </form>
-    </section>
+    </details>
 
+<<<<<<< HEAD
     <p class="filter-result"
        th:text="${resultats + ' contrat(s) trouvé(s) sur ' + totalContrats}"></p>
     <p th:if="${#lists.isEmpty(contrats)}">Aucun contrat ne correspond à vos critères.</p>
@@ -86,8 +131,89 @@
             </p>
             <a class="button" th:href="@{/contrats/{id}(id=${contrat.id})}">
                 Consulter le contrat
+=======
+    <section class="contracts-list" aria-labelledby="contracts-list-title">
+        <p class="sr-only" th:text="${resultats + ' contrat(s) trouvé(s) sur ' + totalContrats}"></p>
+        <div class="contracts-list-head">
+            <div>
+                <h2 id="contracts-list-title">Tous les contrats</h2>
+                <p th:if="${resultats > 0}"
+                   th:text="${'Affichage de ' + debutResultat + ' à ' + finResultat + ' sur ' + resultats}"></p>
+                <p th:if="${resultats == 0}">Aucun résultat pour ces critères</p>
+            </div>
+            <a class="clear-filters" th:if="${filtresActifs}" th:href="@{/bailleur/contrats}">Effacer les filtres</a>
+        </div>
+
+        <div class="contracts-empty" th:if="${#lists.isEmpty(contrats)}">
+            <strong>Aucun contrat à afficher</strong>
+            <p th:if="${filtresActifs}">Modifiez vos critères ou réinitialisez les filtres.</p>
+            <p th:unless="${filtresActifs}">Les contrats apparaîtront ici après l'accord des deux parties.</p>
+        </div>
+
+        <div class="contracts-table-wrap" th:unless="${#lists.isEmpty(contrats)}">
+            <table class="contracts-table">
+                <thead>
+                <tr>
+                    <th scope="col">Contrat</th>
+                    <th scope="col">Bien</th>
+                    <th scope="col">Locataire</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Généré le</th>
+                    <th scope="col"><span class="sr-only">Action</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="contrat : ${contrats}">
+                    <td data-label="Contrat">
+                        <strong class="contract-number" th:text="${contrat.numero}" th:title="${contrat.numero}">LB-2026-0001</strong>
+                    </td>
+                    <td data-label="Bien">
+                        <span class="primary-cell"
+                              th:text="${contrat.proposition.candidature.annonce.bien.adresse}"></span>
+                        <small th:text="${contrat.proposition.candidature.annonce.bien.typeBien}"></small>
+                    </td>
+                    <td data-label="Locataire">
+                        <span class="primary-cell"
+                              th:text="${contrat.proposition.candidature.locataire.prenom
+                              + ' ' + contrat.proposition.candidature.locataire.nom}"></span>
+                        <small th:text="${contrat.proposition.candidature.locataire.email}"></small>
+                    </td>
+                    <td data-label="Statut">
+                        <span th:class="${'status-badge status-' + #strings.toLowerCase(contrat.statut)}"
+                              th:switch="${contrat.statut}">
+                            <span th:case="'A_SIGNER'">À signer</span>
+                            <span th:case="'SIGNE'">Signé</span>
+                            <span th:case="'TERMINE'">Terminé</span>
+                            <span th:case="'RESILIE'">Résilié</span>
+                            <span th:case="*" th:text="${contrat.statut}"></span>
+                        </span>
+                    </td>
+                    <td data-label="Généré le">
+                        <time th:datetime="${contrat.dateGeneration}"
+                              th:text="${#temporals.format(contrat.dateGeneration, 'dd/MM/yyyy')}"></time>
+                        <small th:text="${#temporals.format(contrat.dateGeneration, 'HH:mm')}"></small>
+                    </td>
+                    <td class="contract-action">
+                        <a class="open-contract" th:href="@{/contrats/{id}(id=${contrat.id})}"
+                           th:aria-label="${'Consulter le contrat ' + contrat.numero}">Ouvrir</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <nav class="contracts-pagination" th:if="${totalPages > 1}" aria-label="Pagination des contrats">
+            <a th:classappend="${pageCourante == 0} ? ' disabled'"
+               th:href="${pageCourante == 0} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},page=${pageCourante - 1})}">
+                Précédent
+>>>>>>> 6f6daf1 (web)
             </a>
-        </article>
+            <span th:text="${'Page ' + (pageCourante + 1) + ' sur ' + totalPages}">Page 1 sur 1</span>
+            <a th:classappend="${pageCourante + 1 >= totalPages} ? ' disabled'"
+               th:href="${pageCourante + 1 >= totalPages} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},page=${pageCourante + 1})}">
+                Suivant
+            </a>
+        </nav>
     </section>
 </main>
 </body>

@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{locataire/fragments :: head(${titre})}"></head>
-<body><header th:replace="~{locataire/fragments :: navigation}"></header>
-<main><h1 th:text="${titre}"></h1>
-<p th:if="${#lists.isEmpty(candidatures)}">Aucune candidature pour le moment.</p>
-<div class="tableau" th:unless="${#lists.isEmpty(candidatures)}"><table>
-  <thead><tr><th>Logement</th><th>Locataire</th><th>Statut</th><th>Date</th><th>Dossier</th></tr></thead>
-  <tbody><tr th:each="c : ${candidatures}">
-    <td th:text="${c.annonce.bien.adresse}"></td>
-    <td th:text="${c.locataire.nom + ' ' + c.locataire.prenom}"></td>
-    <td><span class="statut" th:text="${c.statut}"></span></td>
-    <td th:text="${#temporals.format(c.dateCandidature, 'dd/MM/yyyy')}"></td>
-    <td><a th:href="@{/candidatures/{id}(id=${c.id})}">Consulter</a></td>
-  </tr></tbody>
-</table></div></main></body></html>
+<body class="theme-locataire">
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="shell">
+    <div class="page-head">
+        <div><span class="eyebrow">Espace locataire</span><h1 th:text="${titre}"></h1><p>Suivez l’avancement de vos demandes et retrouvez chaque dossier.</p></div>
+        <a class="btn" th:href="@{/annonces}">Voir les annonces</a>
+    </div>
+    <p class="empty-panel" th:if="${#lists.isEmpty(candidatures)}">Aucune candidature pour le moment.</p>
+    <div class="tableau" th:unless="${#lists.isEmpty(candidatures)}">
+        <table>
+            <thead><tr><th>Logement</th><th>Locataire</th><th>Statut</th><th>Date</th><th>Dossier</th></tr></thead>
+            <tbody><tr th:each="c : ${candidatures}">
+                <td th:text="${c.annonce.bien.adresse}"></td>
+                <td th:text="${c.locataire.nom + ' ' + c.locataire.prenom}"></td>
+                <td><span class="statut" th:text="${c.statut}"></span></td>
+                <td th:text="${#temporals.format(c.dateCandidature, 'dd/MM/yyyy')}"></td>
+                <td><a class="btn secondary" th:href="@{/candidatures/{id}(id=${c.id})}">Consulter</a></td>
+            </tr></tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

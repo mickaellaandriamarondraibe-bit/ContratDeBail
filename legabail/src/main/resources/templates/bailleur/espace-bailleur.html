@@ -1,65 +1,78 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Espace bailleur - LegaBail</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body>
-<header class="topbar">
-    <a class="brand" th:href="@{/}">LegaBail</a>
-    <nav aria-label="Navigation principale">
-        <a th:href="@{/annonces}">Annonces</a>
-        <a th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
-        <form class="nav-form" th:action="@{/deconnexion}" method="post">
-            <button class="nav-button" type="submit">Déconnexion</button>
-        </form>
-    </nav>
-</header>
-<main class="container">
-    <h1 th:text="'Bienvenue ' + ${bailleur.prenom} + ' ' + ${bailleur.nom}"></h1>
+<head th:replace="~{locataire/fragments :: head('Espace bailleur')}"></head>
+<body class="theme-bailleur">
+<header th:replace="~{locataire/fragments :: navigation}"></header>
+<main class="shell">
+    <div class="dashboard-heading">
+        <div>
+            <span class="eyebrow">Tableau de bord bailleur</span>
+            <h1 th:text="'Bonjour ' + ${bailleur.prenom}">Bonjour</h1>
+            <p>Retrouvez vos biens, vos annonces et les actions à traiter.</p>
+        </div>
+        <div class="dashboard-actions">
+            <a class="btn secondary" th:href="@{/bailleur/biens/nouveau}">+ Ajouter un bien</a>
+            <a class="btn" th:href="@{/bailleur/annonces/nouvelle}">+ Créer une annonce</a>
+        </div>
+    </div>
 
-    <nav>
-        <a class="button" th:href="@{/bailleur/biens/nouveau}">Ajouter un bien</a>
-        <a class="button" th:href="@{/bailleur/annonces/nouvelle}">Créer une annonce</a>
-        <a class="button" th:href="@{/bailleur/contrats}">Mes contrats</a>
-        <a class="button secondary" th:href="@{/annonces}">Voir les annonces publiées</a>
-    </nav>
-
-    <section>
-        <h2>Mes biens</h2>
-        <p th:if="${#lists.isEmpty(biens)}">Aucun bien enregistré.</p>
-        <ul th:unless="${#lists.isEmpty(biens)}">
-            <li th:each="bien : ${biens}">
-                <strong th:text="${bien.adresse}"></strong>
-                <span th:text="${' - ' + bien.typeLogement}"></span>
-                <a th:href="@{/bailleur/biens/{id}/modifier(id=${bien.id})}">Modifier</a>
-            </li>
-        </ul>
+    <section class="dashboard-stats" aria-label="Résumé du compte">
+        <article class="dashboard-stat"><strong th:text="${#lists.size(biens)}">0</strong><span>Biens enregistrés</span></article>
+        <article class="dashboard-stat"><strong th:text="${#lists.size(annonces)}">0</strong><span>Annonces créées</span></article>
+        <article class="dashboard-stat"><strong th:text="${#lists.size(annonces.?[statut.name() == 'PUBLIEE'])}">0</strong><span>Annonces actuellement publiées</span></article>
     </section>
 
-    <section>
-        <h2>Mes annonces</h2>
-        <p th:if="${#lists.isEmpty(annonces)}">Aucune annonce enregistrée.</p>
-        <ul th:unless="${#lists.isEmpty(annonces)}">
-            <li th:each="annonce : ${annonces}">
-                <a th:href="@{/annonces/{id}(id=${annonce.id})}"
-                   th:text="${annonce.bien.adresse}"></a>
-                <span th:text="${' - ' + annonce.loyer + ' - ' + annonce.statut}"></span>
-                <form th:if="${annonce.statut.name() == 'BROUILLON'}"
-                      th:action="@{/bailleur/annonces/{id}/publier(id=${annonce.id})}"
-                      method="post" style="display:inline">
-                    <button type="submit">Publier</button>
-                </form>
-                <form th:if="${annonce.statut.name() != 'ARCHIVEE' and annonce.statut.name() != 'LOUEE'}"
-                      th:action="@{/bailleur/annonces/{id}/archiver(id=${annonce.id})}"
-                      method="post" style="display:inline">
-                    <button type="submit">Archiver</button>
-                </form>
-            </li>
-        </ul>
-    </section>
+    <div class="dashboard-grid">
+        <section class="dashboard-panel">
+            <div class="dashboard-panel-head">
+                <h2>Mes biens</h2>
+                <a th:href="@{/bailleur/biens/nouveau}">Ajouter</a>
+            </div>
+            <p class="empty-panel" th:if="${#lists.isEmpty(biens)}">Aucun bien enregistré.</p>
+            <ul class="dashboard-list" th:unless="${#lists.isEmpty(biens)}">
+                <li class="dashboard-item" th:each="bien : ${biens}">
+                    <span class="dashboard-thumb">
+                        <img th:if="${bien.imageUrl != null and !#strings.isEmpty(bien.imageUrl)}" th:src="${bien.imageUrl}" alt="">
+                        <span th:unless="${bien.imageUrl != null and !#strings.isEmpty(bien.imageUrl)}">B</span>
+                    </span>
+                    <span class="dashboard-item-main">
+                        <strong th:text="${bien.adresse}"></strong>
+                        <small th:text="${bien.typeBien + ' · ' + (bien.typeLogement.name() == 'MEUBLE' ? 'Meublé' : 'Nu')}"></small>
+                    </span>
+                    <span class="dashboard-item-actions">
+                        <a class="btn secondary" th:href="@{/bailleur/biens/{id}/modifier(id=${bien.id})}">Modifier</a>
+                    </span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="dashboard-panel-head">
+                <h2>Mes annonces</h2>
+                <a th:href="@{/annonces}">Voir le catalogue</a>
+            </div>
+            <p class="empty-panel" th:if="${#lists.isEmpty(annonces)}">Aucune annonce enregistrée.</p>
+            <ul class="dashboard-list" th:unless="${#lists.isEmpty(annonces)}">
+                <li class="dashboard-item" th:each="annonce : ${annonces}">
+                    <span class="dashboard-thumb" th:text="${annonce.bien.typeBien.substring(0, 1)}">A</span>
+                    <span class="dashboard-item-main">
+                        <a th:if="${annonce.statut.name() == 'PUBLIEE'}" th:href="@{/annonces/{id}(id=${annonce.id})}" th:text="${annonce.bien.adresse}"></a>
+                        <strong th:unless="${annonce.statut.name() == 'PUBLIEE'}" th:text="${annonce.bien.adresse}"></strong>
+                        <small th:text="${annonce.loyer + ' Ar/mois · ' + annonce.statut}"></small>
+                    </span>
+                    <span class="dashboard-item-actions">
+                        <form th:if="${annonce.statut.name() == 'BROUILLON'}" th:action="@{/bailleur/annonces/{id}/publier(id=${annonce.id})}" method="post">
+                            <button type="submit">Publier</button>
+                        </form>
+                        <form th:if="${annonce.statut.name() != 'ARCHIVEE' and annonce.statut.name() != 'LOUEE'}" th:action="@{/bailleur/annonces/{id}/archiver(id=${annonce.id})}" method="post">
+                            <button class="btn secondary" type="submit">Archiver</button>
+                        </form>
+                    </span>
+                </li>
+            </ul>
+            <a class="record-link" th:href="@{/bailleur/contrats}">Consulter tous mes contrats →</a>
+        </section>
+    </div>
 </main>
 </body>
 </html>
