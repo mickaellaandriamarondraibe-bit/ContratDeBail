@@ -30,8 +30,12 @@ public class ContratService {
     private final PropositionRepository propositions;
     private final AnnonceRepository annonces;
 
-    public ContratService(ContratRepository contrats, CandidatureRepository candidatures,
-                          PropositionRepository propositions, AnnonceRepository annonces) {
+    public ContratService(
+            ContratRepository contrats,
+            CandidatureRepository candidatures,
+            PropositionRepository propositions,
+            AnnonceRepository annonces
+    ) {
         this.contrats = contrats;
         this.candidatures = candidatures;
         this.propositions = propositions;
@@ -39,33 +43,36 @@ public class ContratService {
     }
 
     public Contrat generer(Proposition reference) {
-        Long candidatureId = propositions.trouverCandidatureId(reference.getId()).orElseThrow();
-        Candidature candidature = candidatures.verrouiller(candidatureId).orElseThrow();
-        Proposition proposition = propositions
-                .findFirstByCandidatureIdOrderByNumeroVersionDesc(candidature.getId()).orElseThrow();
-        if (!proposition.getId().equals(reference.getId())
-                || !proposition.isBailleurAccepte() || !proposition.isLocataireAccepte()) {
-            throw new IllegalArgumentException(
-                    "Le contrat exige le double accord sur la derniere proposition.");
-        }
-<<<<<<< HEAD
-        MajoriteLocataire.verifier(candidature.getLocataire().getDateNaissance());
-        return contrats.findByPropositionId(proposition.getId()).orElseGet(() -> {
-            Contrat contrat = new Contrat();
-            contrat.setProposition(proposition);
-            contrat.setNumero(String.format("LB-%d-%04d", Year.now().getValue(), proposition.getId()));
-            contrat.setContenu(construireContenu(proposition));
-            candidature.setStatut("ACCEPTEE");
-            return contrats.save(contrat);
-        });
-=======
+        Long candidatureId = propositions.trouverCandidatureId(reference.getId())
+                .orElseThrow();
 
-        Contrat existant = contrats.findByPropositionId(proposition.getId()).orElse(null);
+        Candidature candidature = candidatures.verrouiller(candidatureId)
+                .orElseThrow();
+
+        Proposition proposition = propositions
+                .findFirstByCandidatureIdOrderByNumeroVersionDesc(candidature.getId())
+                .orElseThrow();
+
+        if (!proposition.getId().equals(reference.getId())
+                || !proposition.isBailleurAccepte()
+                || !proposition.isLocataireAccepte()) {
+            throw new IllegalArgumentException(
+                    "Le contrat exige le double accord sur la derniere proposition."
+            );
+        }
+
+        Contrat existant = contrats.findByPropositionId(proposition.getId())
+                .orElse(null);
+
         if (existant != null) {
             return existant;
         }
 
-        Annonce annonce = annonces.verrouiller(candidature.getAnnonce().getId()).orElseThrow();
+        MajoriteLocataire.verifier(candidature.getLocataire().getDateNaissance());
+
+        Annonce annonce = annonces.verrouiller(candidature.getAnnonce().getId())
+                .orElseThrow();
+
         if (annonce.getStatut() != StatutAnnonce.PUBLIEE) {
             throw new IllegalArgumentException("Cette annonce n'est plus disponible.");
         }
@@ -74,18 +81,21 @@ public class ContratService {
         contrat.setProposition(proposition);
         contrat.setNumero(String.format("LB-%d-%04d", Year.now().getValue(), proposition.getId()));
         contrat.setContenu(construireContenu(proposition));
+
         candidature.setStatut("ACCEPTEE");
         annonce.setStatut(StatutAnnonce.LOUEE);
+
         return contrats.save(contrat);
->>>>>>> 6f6daf1 (web)
     }
 
     @Transactional(readOnly = true)
     public Contrat consulter(Long id, Long utilisateurId) {
         Contrat contrat = contrats.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         PartiesContrat.verifier(contrat.getProposition().getCandidature(), utilisateurId);
         PartiesContrat.charger(contrat.getProposition().getCandidature());
+
         return contrat;
     }
 
@@ -97,36 +107,64 @@ public class ContratService {
     private String construireContenu(Proposition proposition) {
         Candidature candidature = proposition.getCandidature();
         Bien bien = candidature.getAnnonce().getBien();
+
         String fin = proposition.getDateFin() == null
                 ? "pour une duree indeterminee"
                 : "jusqu'au " + DATE.format(proposition.getDateFin());
+
         return "CONTRAT DE BAIL A USAGE D'HABITATION\n\n"
                 + "Bailleur : " + identite(bien.getBailleur()) + "\n"
                 + "Locataire : " + identite(candidature.getLocataire()) + "\n\n"
-                + "ARTICLE 1 - OBJET DU CONTRAT\nLe bailleur donne en location au locataire le logement decrit ci-dessous.\n\n"
-                + "ARTICLE 2 - DESIGNATION DU LOGEMENT\n" + bien.getTypeBien() + " situe a "
+
+                + "ARTICLE 1 - OBJET DU CONTRAT\n"
+                + "Le bailleur donne en location au locataire le logement decrit ci-dessous.\n\n"
+
+                + "ARTICLE 2 - DESIGNATION DU LOGEMENT\n"
+                + bien.getTypeBien() + " situe a "
                 + bien.getAdresse() + ", usage " + bien.getUsage() + ", logement "
                 + bien.getTypeLogement() + ". Inventaire : " + texte(bien.getInventaire()) + ".\n\n"
-                + "ARTICLE 3 - DUREE\nLe bail commence le " + DATE.format(proposition.getDateDebut())
+
+                + "ARTICLE 3 - DUREE\n"
+                + "Le bail commence le " + DATE.format(proposition.getDateDebut())
                 + " et se poursuit " + fin + ".\n\n"
-                + "ARTICLE 4 - LOYER ET CHARGES\nLoyer mensuel : " + proposition.getLoyer().toPlainString()
-                + " Ar. Charges : " + proposition.getCharges().toPlainString() + " Ar. Mode de paiement : "
+
+                + "ARTICLE 4 - LOYER ET CHARGES\n"
+                + "Loyer mensuel : " + proposition.getLoyer().toPlainString()
+                + " Ar. Charges : " + proposition.getCharges().toPlainString()
+                + " Ar. Mode de paiement : "
                 + texte(candidature.getAnnonce().getModePaiement()) + ".\n\n"
-                + "ARTICLE 5 - CAUTION ET AVANCE\nCaution : " + proposition.getCaution().toPlainString()
+
+                + "ARTICLE 5 - CAUTION ET AVANCE\n"
+                + "Caution : " + proposition.getCaution().toPlainString()
                 + " Ar. Avance : " + proposition.getAvance().toPlainString() + " Ar.\n\n"
-                + "ARTICLE 6 - OBLIGATIONS DU BAILLEUR\nLe bailleur remet un logement utilisable, garantit une jouissance paisible et effectue les reparations qui lui incombent.\n\n"
-                + "ARTICLE 7 - OBLIGATIONS DU LOCATAIRE\nLe locataire paie les sommes convenues, entretient le logement et respecte son usage.\n\n"
-                + "ARTICLE 8 - ETAT DES LIEUX ET INVENTAIRE\nUn etat des lieux contradictoire est etabli lors de la remise des cles.\n\n"
-                + "ARTICLE 9 - RESILIATION ET PREAVIS\nToute resiliation respecte les formes et delais legaux applicables.\n\n"
-                + "ARTICLE 10 - MODIFICATION DU CONTRAT\nSous-location : "
-                + texte(proposition.getSousLocation()) + ". Clauses particulieres : "
+
+                + "ARTICLE 6 - OBLIGATIONS DU BAILLEUR\n"
+                + "Le bailleur remet un logement utilisable, garantit une jouissance paisible "
+                + "et effectue les reparations qui lui incombent.\n\n"
+
+                + "ARTICLE 7 - OBLIGATIONS DU LOCATAIRE\n"
+                + "Le locataire paie les sommes convenues, entretient le logement et respecte son usage.\n\n"
+
+                + "ARTICLE 8 - ETAT DES LIEUX ET INVENTAIRE\n"
+                + "Un etat des lieux contradictoire est etabli lors de la remise des cles.\n\n"
+
+                + "ARTICLE 9 - RESILIATION ET PREAVIS\n"
+                + "Toute resiliation respecte les formes et delais legaux applicables.\n\n"
+
+                + "ARTICLE 10 - MODIFICATION DU CONTRAT\n"
+                + "Sous-location : " + texte(proposition.getSousLocation())
+                + ". Clauses particulieres : "
                 + texte(proposition.getClausesSpeciales()) + ".\n\n"
-                + "ARTICLE 11 - LITIGES\nLes parties recherchent d'abord une solution amiable avant toute saisine de la juridiction competente.";
+
+                + "ARTICLE 11 - LITIGES\n"
+                + "Les parties recherchent d'abord une solution amiable avant toute saisine "
+                + "de la juridiction competente.";
     }
 
     private String identite(Utilisateur utilisateur) {
-        return utilisateur.getPrenom() + " " + utilisateur.getNom() + ", piece : "
-                + texte(utilisateur.getNumeroPiece()) + ", email : " + utilisateur.getEmail()
+        return utilisateur.getPrenom() + " " + utilisateur.getNom()
+                + ", piece : " + texte(utilisateur.getNumeroPiece())
+                + ", email : " + utilisateur.getEmail()
                 + ", telephone : " + texte(utilisateur.getTelephone());
     }
 

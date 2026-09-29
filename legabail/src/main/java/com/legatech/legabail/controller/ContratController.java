@@ -45,63 +45,87 @@ public class ContratController {
             @RequestParam(required = false) LocalDate dateDebut,
             @RequestParam(required = false) LocalDate dateFin,
             @RequestParam(required = false) String statut,
-<<<<<<< HEAD
             @RequestParam(required = false) Integer age,
             @RequestParam(required = false) LocalDate dateNaissance,
-=======
             @RequestParam(defaultValue = "0") int page,
->>>>>>> 6f6daf1 (web)
-            Model model, HttpSession session) {
+            Model model,
+            HttpSession session) {
+
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
 
         List<Contrat> contratsBailleur = contrats.listerBailleur(
-                BailleurController.getBailleurId(session));
+                BailleurController.getBailleurId(session)
+        );
+
         String recherche = ville == null ? "" : ville.strip();
+
         List<Contrat> contratsFiltres = contratsBailleur.stream()
-                .filter(contrat -> age == null || age.equals(contrat.getProposition().getCandidature().getLocataire().getAge()))
-                .filter(contrat -> dateNaissance == null || dateNaissance.equals(contrat.getProposition().getCandidature().getLocataire().getDateNaissance()))
+                .filter(contrat -> age == null
+                        || age.equals(contrat.getProposition()
+                        .getCandidature()
+                        .getLocataire()
+                        .getAge()))
+                .filter(contrat -> dateNaissance == null
+                        || dateNaissance.equals(contrat.getProposition()
+                        .getCandidature()
+                        .getLocataire()
+                        .getDateNaissance()))
                 .filter(contrat -> recherche.isBlank()
-                        || contrat.getProposition().getCandidature().getAnnonce().getBien()
-                        .getAdresse().toLowerCase(Locale.ROOT)
+                        || contrat.getProposition()
+                        .getCandidature()
+                        .getAnnonce()
+                        .getBien()
+                        .getAdresse()
+                        .toLowerCase(Locale.ROOT)
                         .contains(recherche.toLowerCase(Locale.ROOT)))
                 .filter(contrat -> dateDebut == null
                         || !contrat.getDateGeneration().toLocalDate().isBefore(dateDebut))
                 .filter(contrat -> dateFin == null
                         || !contrat.getDateGeneration().toLocalDate().isAfter(dateFin))
-                .filter(contrat -> statut == null || statut.isBlank()
+                .filter(contrat -> statut == null
+                        || statut.isBlank()
                         || statut.equals(contrat.getStatut()))
                 .toList();
 
         int totalPages = contratsFiltres.isEmpty()
                 ? 0
                 : (contratsFiltres.size() + CONTRATS_PAR_PAGE - 1) / CONTRATS_PAR_PAGE;
-        int pageCourante = totalPages == 0 ? 0 : Math.min(Math.max(page, 0), totalPages - 1);
+
+        int pageCourante = totalPages == 0
+                ? 0
+                : Math.min(Math.max(page, 0), totalPages - 1);
+
         int premierIndex = pageCourante * CONTRATS_PAR_PAGE;
         int dernierIndex = Math.min(premierIndex + CONTRATS_PAR_PAGE, contratsFiltres.size());
+
         List<Contrat> contratsPage = contratsFiltres.subList(premierIndex, dernierIndex);
-        boolean filtresActifs = !recherche.isBlank() || dateDebut != null || dateFin != null
+
+        boolean filtresActifs = !recherche.isBlank()
+                || dateDebut != null
+                || dateFin != null
+                || age != null
+                || dateNaissance != null
                 || (statut != null && !statut.isBlank());
 
         model.addAttribute("contrats", contratsPage);
         model.addAttribute("totalContrats", contratsBailleur.size());
         model.addAttribute("resultats", contratsFiltres.size());
-<<<<<<< HEAD
-        model.addAttribute("age", age);
-        model.addAttribute("dateNaissance", dateNaissance);
-        model.addAttribute("ville", ville);
-=======
+
         model.addAttribute("ville", recherche);
->>>>>>> 6f6daf1 (web)
         model.addAttribute("dateDebut", dateDebut);
         model.addAttribute("dateFin", dateFin);
         model.addAttribute("statut", statut);
+        model.addAttribute("age", age);
+        model.addAttribute("dateNaissance", dateNaissance);
+
         model.addAttribute("filtresActifs", filtresActifs);
         model.addAttribute("pageCourante", pageCourante);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("debutResultat", contratsPage.isEmpty() ? 0 : premierIndex + 1);
         model.addAttribute("finResultat", dernierIndex);
+
         return "bailleur/contrats";
     }
 
@@ -114,12 +138,14 @@ public class ContratController {
 
     void charger(Long id, Model model, HttpSession session) {
         Long utilisateurId = SessionPartie.utilisateur(session);
+
         var contrat = contrats.consulter(id, utilisateurId);
         var proposition = contrat.getProposition();
         var candidature = proposition.getCandidature();
         var annonce = candidature.getAnnonce();
         var bien = annonce.getBien();
         var liste = signatures.lister(id, utilisateurId);
+
         BigDecimal totalMensuel = proposition.getLoyer().add(proposition.getCharges());
         BigDecimal garantieTotale = proposition.getCaution().add(proposition.getAvance());
 
@@ -131,25 +157,38 @@ public class ContratController {
         model.addAttribute("bailleur", bien.getBailleur());
         model.addAttribute("locataire", candidature.getLocataire());
         model.addAttribute("signatures", liste);
+
         model.addAttribute("bailleurSignature", liste.stream()
-                .filter(s -> s.getUtilisateur().getRole() == RoleUtilisateur.BAILLEUR)
-                .findFirst().orElse(null));
+                .filter(signature -> signature.getUtilisateur().getRole() == RoleUtilisateur.BAILLEUR)
+                .findFirst()
+                .orElse(null));
+
         model.addAttribute("locataireSignature", liste.stream()
-                .filter(s -> s.getUtilisateur().getRole() == RoleUtilisateur.LOCATAIRE)
-                .findFirst().orElse(null));
+                .filter(signature -> signature.getUtilisateur().getRole() == RoleUtilisateur.LOCATAIRE)
+                .findFirst()
+                .orElse(null));
+
         model.addAttribute("loyerTexte", montant(proposition.getLoyer()));
         model.addAttribute("chargesTexte", montant(proposition.getCharges()));
         model.addAttribute("totalMensuelTexte", montant(totalMensuel));
         model.addAttribute("cautionTexte", montant(proposition.getCaution()));
         model.addAttribute("avanceTexte", montant(proposition.getAvance()));
         model.addAttribute("garantieTotaleTexte", montant(garantieTotale));
+
         model.addAttribute("dateDebutTexte", dateFrancaise(proposition.getDateDebut()));
         model.addAttribute("dateFinTexte", dateFrancaise(proposition.getDateFin()));
         model.addAttribute("dateGenerationTexte", dateFrancaise(contrat.getDateGeneration().toLocalDate()));
-        model.addAttribute("dureeMois", proposition.getDateFin() == null ? null
-                : ChronoUnit.MONTHS.between(proposition.getDateDebut(), proposition.getDateFin().plusDays(1)));
-        model.addAttribute("dejaSigne", liste.stream().anyMatch(s ->
-                s.getUtilisateur().getId().equals(utilisateurId) && "SIGNEE".equals(s.getStatut())));
+
+        model.addAttribute("dureeMois", proposition.getDateFin() == null
+                ? null
+                : ChronoUnit.MONTHS.between(
+                        proposition.getDateDebut(),
+                        proposition.getDateFin().plusDays(1)
+                ));
+
+        model.addAttribute("dejaSigne", liste.stream().anyMatch(signature ->
+                signature.getUtilisateur().getId().equals(utilisateurId)
+                        && "SIGNEE".equals(signature.getStatut())));
     }
 
     private String montant(BigDecimal valeur) {
@@ -163,7 +202,13 @@ public class ContratController {
         if (date == null) {
             return null;
         }
-        String jour = date.getDayOfMonth() == 1 ? "1er" : String.valueOf(date.getDayOfMonth());
-        return jour + " " + date.format(DateTimeFormatter.ofPattern("MMMM uuuu", Locale.FRANCE));
+
+        String jour = date.getDayOfMonth() == 1
+                ? "1er"
+                : String.valueOf(date.getDayOfMonth());
+
+        return jour + " " + date.format(
+                DateTimeFormatter.ofPattern("MMMM uuuu", Locale.FRANCE)
+        );
     }
 }
