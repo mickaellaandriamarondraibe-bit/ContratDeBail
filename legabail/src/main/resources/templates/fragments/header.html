@@ -1,26 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <body>
-<header class="topbar" th:fragment="navigation">
-  <div class="header-identity">
-    <a class="marque" th:href="@{/}">LegaBail</a>
-    <span class="session-role" th:if="${session.bailleurId != null}">Connecté en tant que <strong>bailleur</strong></span>
-    <span class="session-role" th:if="${session.locataireId != null}">Connecté en tant que <strong>locataire</strong></span>
+<header class="topbar site-header" th:fragment="navigation">
+  <div class="header-main">
+    <a class="header-brand" th:href="@{/}" aria-label="LegaBail — Accueil">
+      <span class="brand-symbol" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="m5 14 11-9 11 9v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V14Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 27V16h8v11M13 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand-wordmark">Lega<span>Bail</span><small>Votre location, en confiance.</small></span>
+    </a>
+
+    <details class="account-menu" th:if="${session.locataireId != null or session.bailleurId != null}">
+      <summary>
+        <span class="account-avatar" aria-hidden="true" th:text="${session.bailleurId != null ? 'B' : 'L'}">B</span>
+        <span class="account-label"><small>Connecté en tant que</small><strong th:text="${session.bailleurId != null ? 'Bailleur' : 'Locataire'}">Bailleur</strong></span>
+        <svg class="account-chevron" aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="m6 8 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="account-panel">
+        <span class="account-status"><span aria-hidden="true"></span>Session active</span>
+        <a th:href="${session.bailleurId != null} ? @{/espace-bailleur} : @{/locataire/candidatures}">Accéder à mon espace</a>
+        <form th:action="@{/deconnexion}" method="post">
+          <button type="submit">Se déconnecter</button>
+        </form>
+      </div>
+    </details>
+    <div class="header-auth" th:if="${session.locataireId == null and session.bailleurId == null}">
+      <a class="auth-login" th:href="@{/connexion}">Connexion</a>
+      <a class="auth-register" th:href="@{/inscription/locataire}">Créer un compte <span aria-hidden="true">↗</span></a>
+    </div>
   </div>
-  <nav aria-label="Navigation principale">
-    <a th:href="@{/annonces}">Annonces</a>
-    <a th:href="@{/articles}">Articles juridiques</a>
-    <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mes candidatures</a>
-    <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Espace bailleur</a>
-    <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/contrats}">Mes contrats</a>
-    <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
-    <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/connexion}">Connexion</a>
-    <a th:if="${session.locataireId == null and session.bailleurId == null}" th:href="@{/inscription/locataire}">Inscription</a>
-    <form class="nav-form" th:if="${session.locataireId != null or session.bailleurId != null}"
-          th:action="@{/deconnexion}" method="post">
-      <button class="nav-button" type="submit">Déconnexion</button>
-    </form>
-  </nav>
+
+  <div class="header-navigation">
+    <nav aria-label="Navigation principale">
+      <a th:href="@{/}">Accueil</a>
+      <a th:href="@{/annonces}">Annonces</a>
+      <a th:href="@{/articles}">Articles juridiques</a>
+      <a th:if="${session.bailleurId != null}" th:href="@{/espace-bailleur}">Espace bailleur</a>
+      <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/contrats}">Mes contrats</a>
+      <a th:if="${session.bailleurId != null}" th:href="@{/bailleur/candidatures}">Candidatures reçues</a>
+      <a th:if="${session.locataireId != null}" th:href="@{/locataire/candidatures}">Mes candidatures</a>
+    </nav>
+    <span class="header-caption"><span aria-hidden="true">✦</span> L’immobilier en toute simplicité</span>
+  </div>
+  <script th:src="@{/js/header.js}" defer></script>
 </header>
 </body>
 </html>

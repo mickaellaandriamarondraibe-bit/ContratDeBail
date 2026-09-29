@@ -341,3 +341,72 @@ body:has(header a[href^="/bailleur/"]), body:has(header a[href="/espace-bailleur
 @media (max-width: 1100px) {
     .topbar, body > header { flex-wrap: wrap; gap: 8px 20px; }
 }
+
+/* Header partagé : identité, compte et navigation indépendante de la page. */
+body > .site-header {
+    display: block;
+    padding: 0 max(24px, calc((100vw - 1180px) / 2));
+    color: var(--ink);
+    background: radial-gradient(ellipse at 8% 0%, #ddf5e9 0, transparent 45%), linear-gradient(110deg, #ffffff, #f9fdfa);
+    border-top: 4px solid var(--teal);
+    border-bottom: 1px solid #d4e7dd;
+    box-shadow: 0 8px 32px #10462c08;
+}
+.header-main { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 0; }
+.site-header .header-brand { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none; flex: none; }
+.brand-symbol { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 15px; background: linear-gradient(145deg, #119570, #034638); color: white; box-shadow: 0 7px 16px #08745a28, inset 0 1px 0 #ffffff40; transform: rotate(-5deg); }
+.brand-symbol svg { width: 31px; height: 31px; transform: rotate(5deg); }
+.brand-wordmark { font-size: 28px; font-weight: 850; letter-spacing: -1px; line-height: 1.1; }
+.brand-wordmark > span { color: var(--teal); }
+.brand-wordmark small { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: .15px; }
+.site-header .account-menu { position: relative; padding: 0; border: 0; z-index: 20; }
+.account-menu > summary { display: flex; align-items: center; gap: 11px; padding: 8px 12px 8px 8px; list-style: none; background: #fff; border: 1px solid #d5e8de; border-radius: 14px; cursor: pointer; box-shadow: 0 3px 12px #10462c06; transition: box-shadow .18s, border-color .18s; }
+.account-menu > summary::-webkit-details-marker { display: none; }
+.account-menu > summary:hover, .account-menu[open] > summary { border-color: #8bbfa6; box-shadow: 0 5px 16px #10462c12; }
+.account-menu > summary:focus-visible { outline: 3px solid #72d49f; outline-offset: 3px; }
+.account-avatar { position: relative; display: grid; place-items: center; width: 39px; height: 39px; background: #e5f4ec; color: var(--navy); border-radius: 11px; font-weight: 800; }
+.account-avatar::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 10px; height: 10px; background: #188452; border: 2px solid white; border-radius: 50%; }
+.account-label { display: grid; gap: 1px; }
+.account-label small { color: var(--muted); font-size: 10px; font-weight: 500; }
+.account-label strong { color: var(--navy-dark); font-size: 15px; }
+.account-chevron { width: 18px; height: 18px; margin-left: 10px; color: var(--muted); transition: transform .18s; }
+.account-menu[open] .account-chevron { transform: rotate(180deg); }
+.account-panel { position: absolute; right: 0; top: calc(100% + 10px); width: 240px; padding: 10px; border-radius: 15px; background: #fff; border: 1px solid var(--line); box-shadow: 0 16px 40px #14392b22; }
+.account-status { display: flex; align-items: center; gap: 7px; padding: 8px 10px 12px; font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.account-status > span { width: 6px; height: 6px; border-radius: 50%; background: #188452; }
+.site-header .account-panel a, .site-header .account-panel button { display: flex; width: 100%; min-height: 44px; align-items: center; padding: 10px; background: transparent; border: 0; border-radius: 8px; color: var(--ink); font-size: 13px; font-weight: 600; text-decoration: none; }
+.account-panel form { margin: 0; }
+.site-header .account-panel a:hover, .site-header .account-panel button:hover { background: var(--soft); color: var(--navy); }
+.header-auth { display: flex; align-items: center; gap: 18px; }
+.site-header .auth-login { color: var(--navy); font-size: 13px; font-weight: 650; text-decoration: none; }
+.site-header .auth-register { display: flex; align-items: center; gap: 15px; padding: 12px 17px; border-radius: 10px; color: white; background: var(--navy); box-shadow: 0 4px 12px #075c4620; text-decoration: none; font-size: 13px; font-weight: 700; }
+.header-navigation { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid #dbeae1; }
+.site-header .header-navigation nav { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 0; width: auto; }
+.site-header .header-navigation nav > a { position: relative; padding: 10px 12px; border: 0; border-radius: 8px; color: #52675d; font-size: 12px; font-weight: 650; transition: color .18s, background .18s; white-space: nowrap; }
+.site-header .header-navigation nav > a:hover { color: var(--navy); background: #e8f3ec; }
+.site-header .header-navigation nav > a[aria-current="page"] { color: var(--navy); background: #e0f0e6; }
+.site-header .header-navigation nav > a[aria-current="page"]::after { content: ''; position: absolute; height: 3px; left: 12px; right: 12px; bottom: -8px; border-radius: 3px 3px 0 0; background: var(--teal); }
+.header-caption { display: inline-flex; gap: 7px; align-items: center; color: #6a8276; font-size: 10px; white-space: nowrap; }
+.header-caption > span { color: var(--teal); font-size: 18px; }
+@media (max-width: 1100px) { .header-caption { display: none; } }
+@media (max-width: 620px) {
+    body > .site-header { padding: 0 16px; }
+    .header-main { gap: 14px; padding: 16px 0; flex-wrap: wrap; }
+    .brand-symbol { width: 38px; height: 38px; border-radius: 12px; }
+    .brand-symbol svg { width: 26px; height: 26px; }
+    .brand-wordmark { font-size: 23px; }
+    .brand-wordmark small { display: none; }
+    .account-menu > summary { gap: 7px; padding: 6px; border-radius: 10px; }
+    .account-chevron { margin-left: 0; width: 14px; }
+    .account-avatar { width: 30px; height: 34px; }
+    .account-label small { font-size: 9px; }
+    .account-label strong { font-size: 13px; }
+    .header-auth { gap: 12px; }
+    .site-header .auth-register { padding: 10px 12px; }
+    .site-header .header-navigation nav { gap: 3px; padding: 7px 0; }
+    .site-header .header-navigation nav > a { padding: 9px; font-size: 11px; }
+    .site-header .header-navigation nav > a[aria-current="page"]::after { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .site-header *, .site-header *::after { transition: none !important; }
+}
