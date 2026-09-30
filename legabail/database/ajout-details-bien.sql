@@ -1,0 +1,20 @@
+-- Champs facultatifs : les biens existants restent non renseignés.
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_pieces INTEGER CHECK (nombre_pieces >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_chambres INTEGER CHECK (nombre_chambres >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_douches INTEGER CHECK (nombre_douches >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_salles_bains INTEGER CHECK (nombre_salles_bains >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_wc INTEGER CHECK (nombre_wc >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_cuisines INTEGER CHECK (nombre_cuisines >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS nombre_etages INTEGER CHECK (nombre_etages >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS etage INTEGER CHECK (etage >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS places_parking INTEGER CHECK (places_parking >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS surface_habitable NUMERIC(12,2) CHECK (surface_habitable >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS surface_terrain NUMERIC(12,2) CHECK (surface_terrain >= 0);
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS cloture BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS garage BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS jardin BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS balcon BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS terrasse BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS eau_courante BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS electricite BOOLEAN;
+ALTER TABLE bien ADD COLUMN IF NOT EXISTS description TEXT;

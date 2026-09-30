@@ -30,6 +30,7 @@
                 <div><dt>Mobilier</dt><dd th:text="${annonce.bien.typeLogement.name() == 'MEUBLE' ? 'Meublé avec inventaire' : 'Logement nu'}"></dd></div>
                 <div><dt>Sous-location</dt><dd th:text="${annonce.sousLocation ?: 'Non renseignée'}"></dd></div>
             </dl>
+            <section th:replace="~{fragments/bien :: details(${annonce.bien})}"></section>
             <div class="listing-notice">Le montant affiché sera repris dans votre formulaire. Vous pourrez accepter les conditions ou demander une modification.</div>
             <a class="btn accent detail-action" th:if="${annonce.statut.name() == 'PUBLIEE'}"
                th:href="@{/annonces/{id}/candidater(id=${annonce.id})}">Candidater pour ce bien</a>

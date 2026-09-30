@@ -25,7 +25,26 @@ CREATE TABLE bien (
     type_logement       VARCHAR(15) NOT NULL CHECK (type_logement IN ('NU', 'MEUBLE')),
     date_permis_habiter DATE,
     inventaire          TEXT,
-    image_url           TEXT
+    image_url           TEXT,
+    nombre_pieces INTEGER CHECK (nombre_pieces >= 0),
+    nombre_chambres INTEGER CHECK (nombre_chambres >= 0),
+    nombre_douches INTEGER CHECK (nombre_douches >= 0),
+    nombre_salles_bains INTEGER CHECK (nombre_salles_bains >= 0),
+    nombre_wc INTEGER CHECK (nombre_wc >= 0),
+    nombre_cuisines INTEGER CHECK (nombre_cuisines >= 0),
+    nombre_etages INTEGER CHECK (nombre_etages >= 0),
+    etage INTEGER CHECK (etage >= 0),
+    places_parking INTEGER CHECK (places_parking >= 0),
+    surface_habitable NUMERIC(12,2) CHECK (surface_habitable >= 0),
+    surface_terrain NUMERIC(12,2) CHECK (surface_terrain >= 0),
+    cloture BOOLEAN,
+    garage BOOLEAN,
+    jardin BOOLEAN,
+    balcon BOOLEAN,
+    terrasse BOOLEAN,
+    eau_courante BOOLEAN,
+    electricite BOOLEAN,
+    description TEXT
 );
 
 -- 3. Conditions proposées par le bailleur et visibles sur l'accueil

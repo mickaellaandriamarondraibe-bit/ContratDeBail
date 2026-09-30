@@ -34,7 +34,7 @@
               th:object="${bienForm}" method="post" enctype="multipart/form-data">
             <div class="section-title">
                 <span class="section-number">2</span>
-                <div><h2>Le bien proposé</h2><p>Décrivez le logement sans modifier les informations attendues.</p></div>
+                <div><h2>Le bien proposé</h2><p>Précisez les caractéristiques et les équipements du logement.</p></div>
             </div>
 
             <div class="form-grid">
@@ -84,6 +84,117 @@
                     <label for="datePermisHabiter">Date du permis d'habiter</label>
                     <input id="datePermisHabiter" th:field="*{datePermisHabiter}" type="date">
                     <p class="hint">Cette date permet au moteur de calculer l'ancienneté du bâtiment.</p>
+                </div>
+                <div class="full"><h3>Composition et surfaces</h3><p class="hint">Champs facultatifs. Les pièces principales comprennent les chambres et séjours, hors cuisine et sanitaires. Pour les étages, 0 correspond au rez-de-chaussée.</p></div>
+                <div class="field">
+                    <label for="nombrePieces">Nombre de pièces principales</label>
+                    <input id="nombrePieces" th:field="*{nombrePieces}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombrePieces}"></p>
+                </div>
+                <div class="field">
+                    <label for="nombreChambres">Nombre de chambres</label>
+                    <input id="nombreChambres" th:field="*{nombreChambres}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombreChambres}"></p>
+                </div>
+                <div class="field">
+                    <label for="nombreDouches">Nombre de douches</label>
+                    <input id="nombreDouches" th:field="*{nombreDouches}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombreDouches}"></p>
+                </div>
+                <div class="field">
+                    <label for="nombreSallesBains">Nombre de salles de bains</label>
+                    <input id="nombreSallesBains" th:field="*{nombreSallesBains}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombreSallesBains}"></p>
+                </div>
+                <div class="field">
+                    <label for="nombreWc">Nombre de WC</label>
+                    <input id="nombreWc" th:field="*{nombreWc}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombreWc}"></p>
+                </div>
+                <div class="field">
+                    <label for="nombreCuisines">Nombre de cuisines</label>
+                    <input id="nombreCuisines" th:field="*{nombreCuisines}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombreCuisines}"></p>
+                </div>
+                <div class="field">
+                    <label for="nombreEtages">Nombre d’étages du bâtiment</label>
+                    <input id="nombreEtages" th:field="*{nombreEtages}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{nombreEtages}"></p>
+                </div>
+                <div class="field">
+                    <label for="etage">Étage du logement</label>
+                    <input id="etage" th:field="*{etage}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{etage}"></p>
+                </div>
+                <div class="field">
+                    <label for="placesParking">Nombre de places de parking</label>
+                    <input id="placesParking" th:field="*{placesParking}" type="number" min="0" step="1" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{placesParking}"></p>
+                </div>
+                <div class="field">
+                    <label for="surfaceHabitable">Surface habitable (m²)</label>
+                    <input id="surfaceHabitable" th:field="*{surfaceHabitable}" type="number" min="0" step="0.01" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{surfaceHabitable}"></p>
+                </div>
+                <div class="field">
+                    <label for="surfaceTerrain">Surface du terrain (m²)</label>
+                    <input id="surfaceTerrain" th:field="*{surfaceTerrain}" type="number" min="0" step="0.01" placeholder="Non renseigné">
+                    <p class="field-error" th:errors="*{surfaceTerrain}"></p>
+                </div>
+                <div class="full"><h3>Extérieurs et équipements</h3></div>
+                <div class="field">
+                    <label for="cloture">Terrain clôturé</label>
+                    <select id="cloture" th:field="*{cloture}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{cloture}"></p>
+                </div>
+                <div class="field">
+                    <label for="garage">Garage</label>
+                    <select id="garage" th:field="*{garage}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{garage}"></p>
+                </div>
+                <div class="field">
+                    <label for="jardin">Jardin</label>
+                    <select id="jardin" th:field="*{jardin}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{jardin}"></p>
+                </div>
+                <div class="field">
+                    <label for="balcon">Balcon</label>
+                    <select id="balcon" th:field="*{balcon}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{balcon}"></p>
+                </div>
+                <div class="field">
+                    <label for="terrasse">Terrasse</label>
+                    <select id="terrasse" th:field="*{terrasse}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{terrasse}"></p>
+                </div>
+                <div class="field">
+                    <label for="eauCourante">Eau courante</label>
+                    <select id="eauCourante" th:field="*{eauCourante}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{eauCourante}"></p>
+                </div>
+                <div class="field">
+                    <label for="electricite">Électricité</label>
+                    <select id="electricite" th:field="*{electricite}">
+                        <option value="">Non renseigné</option><option value="true">Oui</option><option value="false">Non</option>
+                    </select>
+                    <p class="field-error" th:errors="*{electricite}"></p>
+                </div>
+                <div class="field full">
+                    <label for="description">Description et autres équipements</label>
+                    <textarea id="description" th:field="*{description}" maxlength="5000" placeholder="État du bien, accès, sécurité, dépendances, équipements supplémentaires…"></textarea>
+                    <p class="field-error" th:errors="*{description}"></p>
                 </div>
                 <div class="field full conditional hidden" data-if-furnished>
                     <label for="inventaire">Inventaire du mobilier</label>

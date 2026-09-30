@@ -427,3 +427,11 @@ body > .site-header {
 .site-header .site-back:hover { background: #eef4f2; }
 .site-header .site-back:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 @media print { .site-back { display: none !important; } }
+
+.bien-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+.bien-facts div { padding: 10px; background: #f4f7f5; border-radius: 8px; }
+.bien-facts dt { font-size: 12px; color: #52675d; }
+.bien-facts dd { margin: 4px 0 0; font-weight: 600; }
+.bien-description { white-space: pre-line; overflow-wrap: anywhere; }
+.dashboard-item-main details { margin-top: 8px; }
+.dashboard-item-main summary { cursor: pointer; }

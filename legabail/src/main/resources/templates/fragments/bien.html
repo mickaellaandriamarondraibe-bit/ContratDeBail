@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"><body>
+<section th:fragment="details(bien)" class="bien-details">
+    <h3>Caractéristiques du bien</h3>
+    <dl class="bien-facts">
+        <div><dt>Nombre de pièces principales</dt><dd th:text="${bien.nombrePieces == null ? 'Non renseigné' : bien.nombrePieces}"></dd></div>
+        <div><dt>Nombre de chambres</dt><dd th:text="${bien.nombreChambres == null ? 'Non renseigné' : bien.nombreChambres}"></dd></div>
+        <div><dt>Nombre de douches</dt><dd th:text="${bien.nombreDouches == null ? 'Non renseigné' : bien.nombreDouches}"></dd></div>
+        <div><dt>Nombre de salles de bains</dt><dd th:text="${bien.nombreSallesBains == null ? 'Non renseigné' : bien.nombreSallesBains}"></dd></div>
+        <div><dt>Nombre de WC</dt><dd th:text="${bien.nombreWc == null ? 'Non renseigné' : bien.nombreWc}"></dd></div>
+        <div><dt>Nombre de cuisines</dt><dd th:text="${bien.nombreCuisines == null ? 'Non renseigné' : bien.nombreCuisines}"></dd></div>
+        <div><dt>Nombre d’étages du bâtiment</dt><dd th:text="${bien.nombreEtages == null ? 'Non renseigné' : bien.nombreEtages}"></dd></div>
+        <div><dt>Étage du logement</dt><dd th:text="${bien.etage == null ? 'Non renseigné' : bien.etage}"></dd></div>
+        <div><dt>Nombre de places de parking</dt><dd th:text="${bien.placesParking == null ? 'Non renseigné' : bien.placesParking}"></dd></div>
+        <div><dt>Surface habitable (m²)</dt><dd th:text="${bien.surfaceHabitable == null ? 'Non renseigné' : bien.surfaceHabitable}"></dd></div>
+        <div><dt>Surface du terrain (m²)</dt><dd th:text="${bien.surfaceTerrain == null ? 'Non renseigné' : bien.surfaceTerrain}"></dd></div>
+        <div><dt>Terrain clôturé</dt><dd th:text="${bien.cloture == null ? 'Non renseigné' : (bien.cloture ? 'Oui' : 'Non')}"></dd></div>
+        <div><dt>Garage</dt><dd th:text="${bien.garage == null ? 'Non renseigné' : (bien.garage ? 'Oui' : 'Non')}"></dd></div>
+        <div><dt>Jardin</dt><dd th:text="${bien.jardin == null ? 'Non renseigné' : (bien.jardin ? 'Oui' : 'Non')}"></dd></div>
+        <div><dt>Balcon</dt><dd th:text="${bien.balcon == null ? 'Non renseigné' : (bien.balcon ? 'Oui' : 'Non')}"></dd></div>
+        <div><dt>Terrasse</dt><dd th:text="${bien.terrasse == null ? 'Non renseigné' : (bien.terrasse ? 'Oui' : 'Non')}"></dd></div>
+        <div><dt>Eau courante</dt><dd th:text="${bien.eauCourante == null ? 'Non renseigné' : (bien.eauCourante ? 'Oui' : 'Non')}"></dd></div>
+        <div><dt>Électricité</dt><dd th:text="${bien.electricite == null ? 'Non renseigné' : (bien.electricite ? 'Oui' : 'Non')}"></dd></div>
+    </dl>
+    <p class="bien-description" th:if="${bien.description != null and !#strings.isEmpty(bien.description)}" th:text="${bien.description}"></p>
+</section>
+</body></html>

@@ -57,6 +57,25 @@ public class BienService {
         bien.setDatePermisHabiter(form.getDatePermisHabiter());
         bien.setInventaire(form.getInventaire());
         bien.setImageUrl(form.getImageUrl());
+        bien.setNombrePieces(form.getNombrePieces());
+        bien.setNombreChambres(form.getNombreChambres());
+        bien.setNombreDouches(form.getNombreDouches());
+        bien.setNombreSallesBains(form.getNombreSallesBains());
+        bien.setNombreWc(form.getNombreWc());
+        bien.setNombreCuisines(form.getNombreCuisines());
+        bien.setNombreEtages(form.getNombreEtages());
+        bien.setEtage(form.getEtage());
+        bien.setPlacesParking(form.getPlacesParking());
+        bien.setSurfaceHabitable(form.getSurfaceHabitable());
+        bien.setSurfaceTerrain(form.getSurfaceTerrain());
+        bien.setCloture(form.getCloture());
+        bien.setGarage(form.getGarage());
+        bien.setJardin(form.getJardin());
+        bien.setBalcon(form.getBalcon());
+        bien.setTerrasse(form.getTerrasse());
+        bien.setEauCourante(form.getEauCourante());
+        bien.setElectricite(form.getElectricite());
+        bien.setDescription(form.getDescription());
     }
 
     private void verifierProprietaire(Bien bien, Long bailleurId) {

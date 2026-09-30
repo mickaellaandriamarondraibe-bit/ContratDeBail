@@ -35,10 +35,11 @@
                         <img th:if="${bien.imageUrl != null and !#strings.isEmpty(bien.imageUrl)}" th:src="${bien.imageUrl}" alt="">
                         <span th:unless="${bien.imageUrl != null and !#strings.isEmpty(bien.imageUrl)}">B</span>
                     </span>
-                    <span class="dashboard-item-main">
+                    <div class="dashboard-item-main">
                         <strong th:text="${bien.adresse}"></strong>
                         <small th:text="${bien.typeBien + ' · ' + (bien.typeLogement.name() == 'MEUBLE' ? 'Meublé' : 'Nu')}"></small>
-                    </span>
+                        <details><summary>Caractéristiques du bien</summary><section th:replace="~{fragments/bien :: details(${bien})}"></section></details>
+                    </div>
                     <span class="dashboard-item-actions">
                         <a class="btn secondary" th:href="@{/bailleur/biens/{id}/modifier(id=${bien.id})}">Modifier</a>
                     </span>
