@@ -13,13 +13,13 @@ import org.springframework.data.jpa.repository.Query;
 public interface AnnonceRepository extends JpaRepository<Annonce, Long> {
 
     @Override
-    @EntityGraph(attributePaths = {"bien.bailleur"})
+    @EntityGraph(attributePaths = {"bien.bailleur", "bien.photos"})
     Optional<Annonce> findById(Long id);
 
-    @EntityGraph(attributePaths = {"bien.bailleur"})
+    @EntityGraph(attributePaths = {"bien.bailleur", "bien.photos"})
     List<Annonce> findByStatut(StatutAnnonce statut);
 
-    @EntityGraph(attributePaths = {"bien.bailleur"})
+    @EntityGraph(attributePaths = {"bien.bailleur", "bien.photos"})
     List<Annonce> findByBienBailleurId(Long bailleurId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

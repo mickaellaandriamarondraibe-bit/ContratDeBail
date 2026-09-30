@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"><body>
+<div th:fragment="photos(bien, style)" th:class="${style + ' photo-gallery'}" data-gallery
+     role="region" aria-roledescription="carrousel" th:aria-label="${'Photos du bien : ' + bien.adresse}" tabindex="0">
+    <div class="gallery-track">
+        <img th:each="photo, index : ${bien.galeriePhotos}" th:src="${photo}"
+             th:alt="${bien.typeBien + ' — photo ' + (index.index + 1) + ' sur ' + #lists.size(bien.galeriePhotos)}"
+             loading="lazy" draggable="false">
+        <span class="photo-placeholder" th:if="${#lists.isEmpty(bien.galeriePhotos)}"><b>Photo du bien</b><small>À venir</small></span>
+    </div>
+    <div class="gallery-controls" th:if="${#lists.size(bien.galeriePhotos) > 1}">
+        <button type="button" class="gallery-prev" aria-label="Photo précédente">‹</button>
+        <span class="gallery-count" aria-live="polite" aria-atomic="true" th:text="${'1 / ' + #lists.size(bien.galeriePhotos)}"></span>
+        <button type="button" class="gallery-next" aria-label="Photo suivante">›</button>
+    </div>
+</div>
+</body></html>

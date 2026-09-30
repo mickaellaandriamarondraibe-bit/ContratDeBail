@@ -1,6 +1,11 @@
 package com.legatech.legabail.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.OrderColumn;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -105,6 +110,21 @@ public class Bien {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "bien_photo", joinColumns = @JoinColumn(name = "bien_id"))
+    @OrderColumn(name = "position")
+    @Column(name = "url", nullable = false, columnDefinition = "TEXT")
+    private List<String> photos = new ArrayList<>();
+
+    public List<String> getPhotos() { return photos; }
+
+    public List<String> getGaleriePhotos() {
+        List<String> galerie = new ArrayList<>();
+        if (imageUrl != null && !imageUrl.isBlank()) galerie.add(imageUrl);
+        for (String photo : photos) if (!galerie.contains(photo)) galerie.add(photo);
+        return galerie;
+    }
 
     public Bien() {
     }

@@ -16,3 +16,4 @@ WHERE id IN (24, 54, 56);
 -- \i /home/carlos/Documents/roby/S5/DDAE/project/ContratDeBail/legabail/database/donnees-demonstration-completes.sql;
 -- \i /home/carlos/Documents/roby/S5/DDAE/project/ContratDeBail/legabail/database/legabail-articles-regles-complet.sql;
 -- \i /home/carlos/Documents/roby/S5/DDAE/project/ContratDeBail/legabail/database/schema-legabail.sql;
+-- \i /home/carlos/Documents/roby/S5/DDAE/project/ContratDeBail/legabail/database/ajout-details-bien.sql

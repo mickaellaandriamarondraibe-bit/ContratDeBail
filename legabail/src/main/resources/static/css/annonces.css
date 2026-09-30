@@ -111,3 +111,16 @@
     .detail-panel { padding: 21px; }
     .detail-panel h1 { font-size: 29px; }
 }
+
+.photo-gallery { position: relative; min-width: 0; }
+.gallery-track { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.gallery-track::-webkit-scrollbar { display: none; }
+.photo-gallery .gallery-track img { flex: 0 0 100%; width: 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; object-fit: cover; }
+.gallery-track .photo-placeholder { width: 100%; }
+.listing-card:hover .photo-gallery img { transform: none; }
+.detail-photo.photo-gallery { height: 470px; }
+.gallery-controls { position: absolute; inset: auto 12px 12px; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
+.gallery-controls button { pointer-events: auto; width: 44px; height: 44px; min-height: 44px; padding: 0; border: 1px solid #d8e1de; border-radius: 50%; background: white; color: #183d32; font-size: 30px; line-height: 1; }
+.gallery-count { padding: 5px 12px; border-radius: 20px; background: #163c32e6; color: white; font-size: 13px; }
+.photo-gallery:focus-visible, .gallery-controls button:focus-visible { outline: 3px solid #087e64; outline-offset: 3px; }
+@media (max-width: 620px) { .detail-photo.photo-gallery { height: 300px; } }

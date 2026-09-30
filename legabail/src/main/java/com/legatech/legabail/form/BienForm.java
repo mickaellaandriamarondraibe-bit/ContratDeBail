@@ -10,6 +10,13 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 
 public class BienForm {
+    private java.util.List<String> photosAjoutees = new java.util.ArrayList<>();
+    private java.util.List<String> photosSupprimees = new java.util.ArrayList<>();
+    public java.util.List<String> getPhotosAjoutees() { return photosAjoutees; }
+    public void setPhotosAjoutees(java.util.List<String> photos) { this.photosAjoutees = photos; }
+    public java.util.List<String> getPhotosSupprimees() { return photosSupprimees; }
+    public void setPhotosSupprimees(java.util.List<String> photos) { this.photosSupprimees = photos; }
+
 
     @NotBlank(message = "L'adresse est obligatoire.")
     private String adresse;

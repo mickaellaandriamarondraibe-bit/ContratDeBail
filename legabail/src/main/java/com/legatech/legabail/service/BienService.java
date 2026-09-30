@@ -56,7 +56,12 @@ public class BienService {
         bien.setTypeLogement(form.getTypeLogement());
         bien.setDatePermisHabiter(form.getDatePermisHabiter());
         bien.setInventaire(form.getInventaire());
-        bien.setImageUrl(form.getImageUrl());
+        var galerie = bien.getGaleriePhotos();
+        galerie.removeAll(form.getPhotosSupprimees());
+        galerie.addAll(form.getPhotosAjoutees());
+        bien.setImageUrl(galerie.isEmpty() ? null : galerie.removeFirst());
+        bien.getPhotos().clear();
+        bien.getPhotos().addAll(galerie);
         bien.setNombrePieces(form.getNombrePieces());
         bien.setNombreChambres(form.getNombreChambres());
         bien.setNombreDouches(form.getNombreDouches());

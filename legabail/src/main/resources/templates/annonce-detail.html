@@ -6,14 +6,7 @@
 <main class="listing-detail-page">
     <a class="back-link" th:href="@{/annonces}">Retour aux annonces</a>
     <div class="listing-detail">
-        <div class="detail-photo">
-            <img th:if="${annonce.bien.imageUrl != null and !#strings.isEmpty(annonce.bien.imageUrl)}"
-                 th:src="${annonce.bien.imageUrl}"
-                 th:alt="${annonce.bien.typeBien + ' situé à ' + annonce.bien.adresse}">
-            <span class="photo-placeholder" th:unless="${annonce.bien.imageUrl != null and !#strings.isEmpty(annonce.bien.imageUrl)}">
-                <b>Photo du bien</b><small>À venir</small>
-            </span>
-        </div>
+        <div th:replace="~{fragments/galerie :: photos(${annonce.bien}, 'detail-photo')}"></div>
         <section class="detail-panel">
             <div class="listing-tags">
                 <span class="listing-tag verified">Première vérification effectuée</span>
@@ -37,5 +30,6 @@
         </section>
     </div>
 </main>
+<script th:src="@{/js/galerie.js}"></script>
 </body>
 </html>

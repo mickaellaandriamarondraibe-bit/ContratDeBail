@@ -31,14 +31,8 @@ public class StockageImageService {
         if (fichier == null || fichier.isEmpty()) {
             return null;
         }
-        if (fichier.getSize() > TAILLE_MAXIMALE) {
-            throw new IllegalArgumentException("La photo ne doit pas dépasser 5 Mo.");
-        }
-
+        valider(fichier);
         String extension = EXTENSIONS.get(fichier.getContentType());
-        if (extension == null || !signatureValide(fichier, extension)) {
-            throw new IllegalArgumentException("Choisissez une image JPG, PNG ou WebP valide.");
-        }
 
         try {
             Files.createDirectories(repertoire);
@@ -54,6 +48,19 @@ public class StockageImageService {
         } catch (IOException exception) {
             throw new IllegalStateException("Impossible d'enregistrer la photo du bien.", exception);
         }
+    }
+
+    public void valider(MultipartFile fichier) {
+        if (fichier == null || fichier.isEmpty()) return;
+        if (fichier.getSize() > TAILLE_MAXIMALE) {
+            throw new IllegalArgumentException("La photo ne doit pas dépasser 5 Mo.");
+        }
+
+        String extension = EXTENSIONS.get(fichier.getContentType());
+        if (extension == null || !signatureValide(fichier, extension)) {
+            throw new IllegalArgumentException("Choisissez une image JPG, PNG ou WebP valide.");
+        }
+
     }
 
     private boolean signatureValide(MultipartFile fichier, String extension) {

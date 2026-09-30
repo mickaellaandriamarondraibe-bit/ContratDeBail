@@ -38,24 +38,20 @@
             </div>
 
             <div class="form-grid">
-                <div class="photo-upload full">
-                    <div class="photo-preview">
-                        <img id="imagePreview" th:src="*{imageUrl}" alt="Aperçu de la photo du bien"
-                             th:classappend="*{imageUrl == null or #strings.isEmpty(imageUrl)} ? 'hidden'">
-                        <span id="imagePlaceholder"
-                              th:classappend="*{imageUrl != null and !#strings.isEmpty(imageUrl)} ? 'hidden'">
-                            <b>Photo du bien</b>
-                            <small>Ajoutez une photo claire du logement</small>
-                        </span>
+                <div class="field full">
+                    <label for="image">Photos du bien</label>
+                    <p class="hint">Montrez le bâtiment, les chambres, les douches et les autres pièces. Jusqu’à 10 photos, JPG, PNG ou WebP, 5 Mo par photo. La première photo sert de couverture.</p>
+                    <div class="photo-thumbnails" th:if="${photosExistantes != null}">
+                        <label class="photo-thumbnail" th:each="photo, index : ${photosExistantes}">
+                            <img th:src="${photo}" th:alt="${'Photo du bien ' + (index.index + 1)}">
+                            <span><input type="checkbox" th:field="*{photosSupprimees}" th:value="${photo}"> Retirer cette photo</span>
+                        </label>
                     </div>
-                    <div class="field photo-field">
-                        <label for="image">Photo du bien</label>
-                        <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp">
-                        <p class="hint">JPG, PNG ou WebP, 5 Mo maximum.</p>
-                        <p class="field-error" th:errors="*{imageUrl}"></p>
-                    </div>
+                    <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="photosAide">
+                    <p id="photosAide" class="hint">Sélectionnez plusieurs fichiers en une fois. Les nouvelles photos seront ajoutées aux photos conservées. En cas d’erreur du formulaire, sélectionnez-les à nouveau.</p>
+                    <div id="photosPreview" class="photo-thumbnails" aria-live="polite"></div>
+                    <p class="field-error" th:errors="*{imageUrl}"></p>
                 </div>
-                <input th:field="*{imageUrl}" type="hidden">
                 <div class="field full">
                     <label for="adresse">Adresse <span class="required">*</span></label>
                     <textarea id="adresse" th:field="*{adresse}" placeholder="Ville, quartier et adresse" required></textarea>
@@ -216,21 +212,6 @@
     </div>
 </main>
 <script th:src="@{/js/controle-regles.js}"></script>
-<script>
-    const imageInput = document.querySelector('#image');
-    const imagePreview = document.querySelector('#imagePreview');
-    const imagePlaceholder = document.querySelector('#imagePlaceholder');
-    let previewUrl;
-
-    imageInput.addEventListener('change', () => {
-        const [image] = imageInput.files;
-        if (!image) return;
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-        previewUrl = URL.createObjectURL(image);
-        imagePreview.src = previewUrl;
-        imagePreview.classList.remove('hidden');
-        imagePlaceholder.classList.add('hidden');
-    });
-</script>
+<script th:src="@{/js/photos-bien.js}"></script>
 </body>
 </html>

@@ -6,6 +6,9 @@ import com.legatech.legabail.service.BienService;
 import com.legatech.legabail.service.StockageImageService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +30,11 @@ public class BienController {
         this.stockageImageService = stockageImageService;
     }
 
+    @InitBinder("bienForm")
+    public void protegerPhotos(WebDataBinder binder) {
+        binder.setDisallowedFields("photosAjoutees", "photosAjoutees[*]");
+    }
+
     @GetMapping("/bailleur/biens/nouveau")
     public String afficherNouveauBien(Model model, HttpSession session) {
         if (!BailleurController.estConnecte(session)) {
@@ -40,13 +48,14 @@ public class BienController {
     @PostMapping("/bailleur/biens")
     public String enregistrerBien(@Valid @ModelAttribute("bienForm") BienForm form,
                                   BindingResult bindingResult,
-                                  @RequestParam(name = "image", required = false) MultipartFile image,
+                                  @RequestParam(name = "image", required = false) List<MultipartFile> image,
                                   HttpSession session,
                                   Model model) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
-        enregistrerImage(image, form, bindingResult);
+        form.setImageUrl(null);
+        enregistrerImages(image, form, bindingResult, List.of());
         if (bindingResult.hasErrors()) {
             model.addAttribute("typesLogement", TypeLogement.values());
             return "bailleur/formulaire-bien";
@@ -91,6 +100,7 @@ public class BienController {
         form.setEauCourante(bien.getEauCourante());
         form.setElectricite(bien.getElectricite());
         form.setDescription(bien.getDescription());
+        model.addAttribute("photosExistantes", bien.getGaleriePhotos());
         model.addAttribute("bienForm", form);
         model.addAttribute("bienId", id);
         model.addAttribute("typesLogement", TypeLogement.values());
@@ -101,13 +111,17 @@ public class BienController {
     public String modifierBien(@PathVariable Long id,
                                @Valid @ModelAttribute("bienForm") BienForm form,
                                BindingResult bindingResult,
-                               @RequestParam(name = "image", required = false) MultipartFile image,
+                               @RequestParam(name = "image", required = false) List<MultipartFile> image,
                                HttpSession session,
                                Model model) {
         if (!BailleurController.estConnecte(session)) {
             return "redirect:/connexion";
         }
-        enregistrerImage(image, form, bindingResult);
+        var bien = bienService.trouverParId(id);
+        verifierProprietaire(bien.getBailleur().getId(), session);
+        form.setImageUrl(bien.getImageUrl());
+        model.addAttribute("photosExistantes", bien.getGaleriePhotos());
+        enregistrerImages(image, form, bindingResult, bien.getGaleriePhotos());
         if (bindingResult.hasErrors()) {
             model.addAttribute("bienId", id);
             model.addAttribute("typesLogement", TypeLogement.values());
@@ -118,12 +132,19 @@ public class BienController {
         return "redirect:/espace-bailleur";
     }
 
-    private void enregistrerImage(MultipartFile image, BienForm form, BindingResult bindingResult) {
+    private void enregistrerImages(List<MultipartFile> images, BienForm form,
+                                   BindingResult bindingResult, List<String> existantes) {
+        if (bindingResult.hasErrors()) return;
+        List<MultipartFile> fichiers = images == null ? List.of()
+                : images.stream().filter(image -> !image.isEmpty()).toList();
+        long conservees = existantes.stream().filter(url -> !form.getPhotosSupprimees().contains(url)).count();
+        if (conservees + fichiers.size() > 10) {
+            bindingResult.rejectValue("imageUrl", "image.limite", "Vous pouvez conserver au maximum 10 photos par bien.");
+            return;
+        }
         try {
-            String imageUrl = stockageImageService.stocker(image);
-            if (imageUrl != null) {
-                form.setImageUrl(imageUrl);
-            }
+            for (MultipartFile fichier : fichiers) stockageImageService.valider(fichier);
+            for (MultipartFile fichier : fichiers) form.getPhotosAjoutees().add(stockageImageService.stocker(fichier));
         } catch (IllegalArgumentException | IllegalStateException exception) {
             bindingResult.rejectValue("imageUrl", "image.invalide", exception.getMessage());
         }
