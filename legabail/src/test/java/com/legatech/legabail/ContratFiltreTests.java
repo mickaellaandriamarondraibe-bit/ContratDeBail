@@ -113,18 +113,44 @@ class ContratFiltreTests {
             utilisateurs.save(locataire);
         }
         mvc.perform(get("/bailleur/contrats").session(session(bailleur))
-                        .param("age", "30").param("dateNaissance", naissance.toString()))
+                        .param("nom", "Test").param("age", "30").param("dateNaissance", naissance.toString()))
                 .andExpect(status().isOk())
+                .andExpect(content().string(containsString("nom=Test&amp;")))
                 .andExpect(content().string(containsString("name=\"age\"")))
                 .andExpect(content().string(containsString("name=\"dateNaissance\"")))
                 .andExpect(content().string(containsString("age=30&amp;dateNaissance=" + naissance + "&amp;page=1")));
         mvc.perform(get("/bailleur/contrats").session(session(bailleur))
-                        .param("age", "30").param("dateNaissance", naissance.toString()).param("page", "1"))
+                        .param("nom", "Test").param("age", "30").param("dateNaissance", naissance.toString()).param("page", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("contrats", hasSize(1)));
         mvc.perform(get("/inscription/locataire"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("name=\"dateNaissance\"")));
+    }
+
+    @Test
+    void filtreNomOuPrenomSansTenirCompteDeLaCasse() throws Exception {
+        Utilisateur bailleur = utilisateur(RoleUtilisateur.BAILLEUR, "Recherche nom");
+        Contrat cible = contrat(bailleur, "Adresse recherchée", LocalDate.now(), "SIGNE");
+        contrat(bailleur, "Autre adresse", LocalDate.now(), "SIGNE");
+        Utilisateur locataire = cible.getProposition().getCandidature().getLocataire();
+        locataire.setNom("Rakoto");
+        locataire.setPrenom("Marie");
+        utilisateurs.save(locataire);
+        for (String critere : new String[]{"  RAK  ", "marie", "Marie Rakoto", "Rakoto Marie"}) {
+            mvc.perform(get("/bailleur/contrats").session(session(bailleur)).param("nom", critere))
+                    .andExpect(status().isOk())
+                    .andExpect(model().attribute("contrats", hasSize(1)))
+                    .andExpect(model().attribute("filtresActifs", true))
+                    .andExpect(content().string(containsString("Adresse recherchée")))
+                    .andExpect(content().string(not(containsString("Autre adresse"))))
+                    .andExpect(content().string(containsString("site-back")));
+        }
+        mvc.perform(get("/bailleur/contrats").session(session(bailleur)).param("nom", "inconnu"))
+                .andExpect(model().attribute("contrats", hasSize(0)));
+        mvc.perform(get("/bailleur/contrats").session(session(bailleur)).param("nom", "  "))
+                .andExpect(model().attribute("contrats", hasSize(2)))
+                .andExpect(model().attribute("filtresActifs", false));
     }
 
     private Contrat contrat(Utilisateur bailleur, String adresse, LocalDate date, String statut) {

@@ -27,12 +27,17 @@
         <summary>
             <span>
                 <strong>Filtrer les contrats</strong>
-                <small th:if="${!filtresActifs}">Âge, date de naissance, adresse, période ou statut</small>
+                <small th:if="${!filtresActifs}">Nom, prénom, âge, date de naissance, adresse, période ou statut</small>
                 <small th:if="${filtresActifs}">Des filtres sont actuellement appliqués</small>
             </span>
             <span class="filter-indicator" th:if="${filtresActifs}">Actifs</span>
         </summary>
         <form th:action="@{/bailleur/contrats}" method="get">
+            <div class="filter-field">
+                <label for="nom">Nom ou prénom du locataire</label>
+                <input id="nom" name="nom" type="search"
+                       th:value="${nom}" placeholder="Ex. Rakoto ou Marie">
+            </div>
             <div class="filter-field filter-address">
                 <label for="ville">Ville ou adresse</label>
                 <input id="ville" name="ville" type="search"
@@ -147,12 +152,12 @@
 
         <nav class="contracts-pagination" th:if="${totalPages > 1}" aria-label="Pagination des contrats">
             <a th:classappend="${pageCourante == 0} ? ' disabled'"
-               th:href="${pageCourante == 0} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},age=${age},dateNaissance=${dateNaissance},page=${pageCourante - 1})}">
+               th:href="${pageCourante == 0} ? null : @{/bailleur/contrats(nom=${nom},ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},age=${age},dateNaissance=${dateNaissance},page=${pageCourante - 1})}">
                 Précédent
             </a>
             <span th:text="${'Page ' + (pageCourante + 1) + ' sur ' + totalPages}">Page 1 sur 1</span>
             <a th:classappend="${pageCourante + 1 >= totalPages} ? ' disabled'"
-               th:href="${pageCourante + 1 >= totalPages} ? null : @{/bailleur/contrats(ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},age=${age},dateNaissance=${dateNaissance},page=${pageCourante + 1})}">
+               th:href="${pageCourante + 1 >= totalPages} ? null : @{/bailleur/contrats(nom=${nom},ville=${ville},dateDebut=${dateDebut},dateFin=${dateFin},statut=${statut},age=${age},dateNaissance=${dateNaissance},page=${pageCourante + 1})}">
                 Suivant
             </a>
         </nav>

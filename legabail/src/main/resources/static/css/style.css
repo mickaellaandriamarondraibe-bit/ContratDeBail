@@ -410,3 +410,20 @@ body > .site-header {
 @media (prefers-reduced-motion: reduce) {
     .site-header *, .site-header *::after { transition: none !important; }
 }
+
+/* Navigation de retour commune à toutes les pages. */
+.site-header .site-back {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    flex-shrink: 0;
+    padding: .5rem .85rem;
+    border: 1px solid currentColor;
+    border-radius: .5rem;
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+}
+.site-header .site-back:hover { background: #eef4f2; }
+.site-header .site-back:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media print { .site-back { display: none !important; } }

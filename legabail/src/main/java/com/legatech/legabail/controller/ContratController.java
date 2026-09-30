@@ -42,6 +42,7 @@ public class ContratController {
     @GetMapping("/bailleur/contrats")
     public String listerBailleur(
             @RequestParam(required = false) String ville,
+            @RequestParam(required = false) String nom,
             @RequestParam(required = false) LocalDate dateDebut,
             @RequestParam(required = false) LocalDate dateFin,
             @RequestParam(required = false) String statut,
@@ -60,8 +61,18 @@ public class ContratController {
         );
 
         String recherche = ville == null ? "" : ville.strip();
+        String rechercheNom = nom == null ? "" : nom.strip();
 
         List<Contrat> contratsFiltres = contratsBailleur.stream()
+                .filter(contrat -> {
+                    var locataire = contrat.getProposition().getCandidature().getLocataire();
+                    String nomLocataire = locataire.getNom() == null ? "" : locataire.getNom();
+                    String prenom = locataire.getPrenom() == null ? "" : locataire.getPrenom();
+                    String critere = rechercheNom.toLowerCase(Locale.ROOT);
+                    return rechercheNom.isBlank()
+                            || (nomLocataire + " " + prenom).toLowerCase(Locale.ROOT).contains(critere)
+                            || (prenom + " " + nomLocataire).toLowerCase(Locale.ROOT).contains(critere);
+                })
                 .filter(contrat -> age == null
                         || age.equals(contrat.getProposition()
                         .getCandidature()
@@ -103,6 +114,7 @@ public class ContratController {
         List<Contrat> contratsPage = contratsFiltres.subList(premierIndex, dernierIndex);
 
         boolean filtresActifs = !recherche.isBlank()
+                || !rechercheNom.isBlank()
                 || dateDebut != null
                 || dateFin != null
                 || age != null
@@ -114,6 +126,7 @@ public class ContratController {
         model.addAttribute("resultats", contratsFiltres.size());
 
         model.addAttribute("ville", recherche);
+        model.addAttribute("nom", rechercheNom);
         model.addAttribute("dateDebut", dateDebut);
         model.addAttribute("dateFin", dateFin);
         model.addAttribute("statut", statut);
